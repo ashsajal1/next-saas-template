@@ -28,7 +28,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
-            <main className="p-3">
+            <main className="p-3 mt-[80px]">
               {children}
             </main>
           </ThemeProvider>
