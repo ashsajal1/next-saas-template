@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/next.svg"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.1.5",
@@ -69,6 +70,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@vite-pwa/assets-generator": "^0.2.4",
     "drizzle-kit": "^0.23.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
