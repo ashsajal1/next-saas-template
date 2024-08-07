@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider"
 import { ClerkProvider } from '@clerk/nextjs'
 import Navbar from "@/components/navbar";
+import Nprogress from "@/components/nprogress";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <Nprogress />
             <Navbar />
             <main className="p-3 mt-[80px]">
               {children}
