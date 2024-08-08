@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next SaaS Template
+
+The **Next SaaS Template** is a comprehensive starter kit for building scalable SaaS applications with Next.js, featuring built-in authentication, database integration, responsive design, efficient state management, pre-configured API routes, and developer tools like ESLint, Prettier, and TypeScript support.
+
+## Features
+- **Next.js**: Framework for server-side rendering, static site generation, and seamless API routes.
+- **TypeScript**: For static typing and improved developer experience.
+- **Clerk Authentication**: Built-in user authentication with support for various providers.
+- **Database Integration**: Choose between Prisma or Drizzle for database management.
+- **Tailwind CSS**: Utility-first CSS framework for rapid UI development.
+- **Shadcn**: Component library for React.
+- **PWA Support**: Built-in Progressive Web App capabilities.
 
 ## Getting Started
 
-First, run the development server:
+### Installation
+
+Clone the repository and install dependencies using your preferred package manager (npm, pnpm, or yarn):
 
 ```bash
-npm run dev
+git clone https://github.com/ashsajal1/next-saas-template.git
+cd next-saas-template
+npm install
 # or
-yarn dev
+pnpm install
 # or
-pnpm dev
-# or
-bun dev
+yarn install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Configuration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Authentication**: Set up Clerk for user authentication.
+2. **Database**: Configure either Prisma or Drizzle for your database needs. 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+To switch between Prisma and Drizzle or remove one:
+- For Prisma: Follow the setup instructions in the `prisma` folder.
+- For Drizzle: Follow the setup instructions in the `drizzle` folder.
+- To remove one, simply delete the corresponding folder and configuration files.
 
-## Learn More
+### PWA Assets Generation
 
-To learn more about Next.js, take a look at the following resources:
+Generate PWA assets using the following command:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run generate-pwa-assets
+# or
+pnpm run generate-pwa-assets
+# or
+yarn generate-pwa-assets
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Replace `public/next.svg` with the path to your own logo if needed.
 
-## Deploy on Vercel
+### Adding Payment Method (Stripe)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+We welcome contributions to add a payment method using Stripe. Please refer to the [Contributing](#contributing) section for more details.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Contributing
+
+We welcome contributions to enhance the functionality of this template. Here’s how you can contribute:
+
+1. **Fork the repository**
+2. **Create a new branch** for your feature or bug fix:
+    ```bash
+    git checkout -b feature-name
+    ```
+3. **Commit your changes**:
+    ```bash
+    git commit -m 'Add some feature'
+    ```
+4. **Push to the branch**:
+    ```bash
+    git push origin feature-name
+    ```
+5. **Create a pull request** to the `main` branch.
+
+### Contribution Guidelines
+
+- **Feature Requests**: If you have a feature request, please open an issue to discuss it before starting work.
+- **Bug Reports**: Report bugs by opening an issue.
+- **Code Style**: Follow the existing code style and conventions.
+- **Testing**: Ensure your code is well-tested.
+
+## License
+
+This project is licensed under the MIT License.
