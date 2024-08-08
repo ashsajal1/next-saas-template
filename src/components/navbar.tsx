@@ -19,6 +19,9 @@ export default function Navbar() {
                         <Button>Sign In</Button>
                     </Link>
                 </SignedOut>
+                <Link href='/about'>
+                    <Button>About</Button>
+                </Link>
             </div>
         </nav>
     )
