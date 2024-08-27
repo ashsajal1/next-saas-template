@@ -14,6 +14,10 @@ export default async function Navbar() {
 
             <div className='flex items-center gap-2'>
                 <ModeToggle />
+                
+                <Link href='/about'>
+                    <Button>About</Button>
+                </Link>
                 <SignedIn>
                     <Link href='/profile'>
                         <Image width={35} height={35} src={user?.imageUrl!} alt={user?.fullName!} className='rounded-full' />
@@ -24,9 +28,6 @@ export default async function Navbar() {
                         <Button>Sign In</Button>
                     </Link>
                 </SignedOut>
-                <Link href='/about'>
-                    <Button>About</Button>
-                </Link>
             </div>
         </nav>
     )
