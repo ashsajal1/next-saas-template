@@ -15,7 +15,7 @@ export default async function Navbar() {
             <div className='flex items-center gap-2'>
                 <ModeToggle />
                 <SignedIn>
-                    <Image width={40} height={40} src={user?.imageUrl!} alt={user?.fullName!} className='rounded-full' />
+                    <Image width={35} height={35} src={user?.imageUrl!} alt={user?.fullName!} className='rounded-full' />
                 </SignedIn>
                 <SignedOut>
                     <Link href='/sign-in'>
