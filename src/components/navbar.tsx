@@ -5,6 +5,7 @@ import { SignedIn, SignedOut } from '@clerk/nextjs'
 import Link from 'next/link'
 import { currentUser } from '@clerk/nextjs/server'
 import Image from 'next/image'
+import { Bell } from 'lucide-react'
 
 export default async function Navbar() {
     const user = await currentUser();
@@ -15,8 +16,10 @@ export default async function Navbar() {
             <div className='flex items-center gap-2'>
                 <ModeToggle />
                 
-                <Link href='/about'>
-                    <Button>About</Button>
+                <Link href='/notification'>
+                    <Button size={'icon'} variant={'outline'}>
+                        <Bell className='w-4 h-4' />
+                    </Button>
                 </Link>
                 <SignedIn>
                     <Link href='/profile'>
