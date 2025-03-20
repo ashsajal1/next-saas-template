@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider"
-import { ClerkProvider } from '@clerk/nextjs'
+import { ThemeProvider } from "@/components/theme-provider";
+import { ClerkProvider } from "@clerk/nextjs";
 import Navbar from "@/components/navbar";
 import Nprogress from "@/components/nprogress";
-import Script from "next/script";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,11 +30,8 @@ export default function RootLayout({
           >
             <Nprogress />
             <Navbar />
-            <main className="p-3 mt-[80px]">
-              {children}
-            </main>
+            <main className="p-3 mt-[80px]">{children}</main>
           </ThemeProvider>
-          <Script src="/service-worker.js" />
         </body>
       </html>
     </ClerkProvider>
