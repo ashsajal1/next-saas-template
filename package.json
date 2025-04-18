@@ -53,6 +53,7 @@
     "framer-motion": "^11.18.2",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.424.0",
+    "motion": "^12.7.4",
     "next": "14.2.4",
     "next-nprogress-bar": "^2.4.7",
     "next-shadcn-tsx": "file:",
