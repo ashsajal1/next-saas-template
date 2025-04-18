@@ -6,7 +6,7 @@ The **Next SaaS Template** is a comprehensive starter kit for building scalable 
 - **Next.js**: Framework for server-side rendering, static site generation, and seamless API routes.
 - **TypeScript**: For static typing and improved developer experience.
 - **Clerk Authentication**: Built-in user authentication with support for various providers.
-- **Database Integration**: Choose between Prisma or Drizzle for database management.
+- **Database Integration**: Both Prisma and Drizzle are included. Choose one based on your preference and remove the other.
 - **Tailwind CSS**: Utility-first CSS framework for rapid UI development.
 - **Shadcn**: Component library for React.
 - **PWA Support**: Built-in Progressive Web App capabilities.
@@ -30,12 +30,13 @@ yarn install
 ### Configuration
 
 1. **Authentication**: Set up Clerk for user authentication.
-2. **Database**: Configure either Prisma or Drizzle for your database needs. 
+2. **Database**: Choose either Prisma or Drizzle for your database needs. You cannot use both simultaneously, so:
+   - If using Prisma: Remove Drizzle by deleting `db` directory and `drizzle.config.ts`. Also remove Drizzle dependencies from `package.json`.
+   - If using Drizzle: Remove Prisma by deleting `prisma` directory and `src/lib/prisma.ts`. Also remove Prisma dependencies from `package.json`.
 
-To switch between Prisma and Drizzle or remove one:
+To switch between Prisma and Drizzle:
 - For Prisma: Follow the setup instructions in the `prisma` folder.
 - For Drizzle: Follow the setup instructions in the `drizzle` folder.
-- To remove one, simply delete the corresponding folder and configuration files.
 
 ### PWA Assets Generation
 

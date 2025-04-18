@@ -1,3 +1,9 @@
+// Note: This template includes both Prisma and Drizzle. If you choose to use Prisma:
+// 1. Delete the /src/db directory
+// 2. Delete drizzle.config.ts
+// 3. Remove drizzle-related dependencies from package.json
+// 4. Run: npm uninstall drizzle-orm @libsql/client drizzle-kit
+
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
