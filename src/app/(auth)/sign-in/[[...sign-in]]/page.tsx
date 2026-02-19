@@ -27,7 +27,7 @@ export default function SignInPage() {
           appearance={{
             elements: {
               rootBox: "w-full",
-              card: "shadow-none border border-border bg-card p-6 rounded-xl dark:bg-card/50 dark:border-border/50 dark:backdrop-blur-sm",
+              card: "shadow-none border border-border bg-card p-6 rounded-xl dark:bg-primary dark:border-border/50 dark:backdrop-blur-sm",
               header: "hidden",
               footer: "hidden",
             }
