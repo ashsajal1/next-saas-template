@@ -4,7 +4,7 @@ import { ArrowLeft, Home, Search, HelpCircle } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4">
+    <div className="min-h-[70vh] flex items-center justify-center px-4 pt-16">
       <div className="max-w-2xl mx-auto text-center">
         {/* 404 Illustration */}
         <div className="mb-8">
