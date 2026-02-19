@@ -1,133 +1,239 @@
-import Link from "next/link"
-import { Facebook, Github, Instagram, Linkedin, Mail, MapPin, Phone, Twitter } from "lucide-react"
+import Link from "next/link";
+import {
+  Facebook,
+  Github,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
+  Twitter,
+  Youtube,
+  Zap,
+  ArrowRight,
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+const productLinks = [
+  { label: "Features", href: "/features" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "Integrations", href: "/integrations" },
+  { label: "Changelog", href: "/changelog" },
+  { label: "Documentation", href: "/docs" },
+];
+
+const companyLinks = [
+  { label: "About Us", href: "/about" },
+  { label: "Blog", href: "/blog" },
+  { label: "Careers", href: "/careers" },
+  { label: "Press Kit", href: "/press" },
+  { label: "Contact", href: "/contact" },
+];
+
+const resourceLinks = [
+  { label: "Help Center", href: "/help" },
+  { label: "Community", href: "/community" },
+  { label: "Templates", href: "/templates" },
+  { label: "Webinars", href: "/webinars" },
+  { label: "API Reference", href: "/api" },
+];
+
+const legalLinks = [
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
+  { label: "Cookie Policy", href: "/cookies" },
+  { label: "GDPR", href: "/gdpr" },
+  { label: "Security", href: "/security" },
+];
+
+const socialLinks = [
+  { icon: Twitter, href: "https://twitter.com/saasflow", label: "Twitter" },
+  { icon: Linkedin, href: "https://linkedin.com/company/saasflow", label: "LinkedIn" },
+  { icon: Github, href: "https://github.com/saasflow", label: "GitHub" },
+  { icon: Youtube, href: "https://youtube.com/saasflow", label: "YouTube" },
+  { icon: Instagram, href: "https://instagram.com/saasflow", label: "Instagram" },
+];
 
 export function Footer() {
   return (
     <footer className="w-full bg-background border-t">
-      <div className="container px-4 py-12 mx-auto">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {/* Company Info */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">About Us</h3>
-            <p className="text-sm text-muted-foreground">
-              We are a leading technology company focused on delivering innovative solutions
-              that transform businesses and enhance user experiences.
+      <div className="container px-4 py-16 mx-auto">
+        {/* Top Section - CTA */}
+        <div className="mb-16 p-8 rounded-2xl bg-primary/5 border border-primary/10">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 className="text-2xl md:text-3xl font-bold mb-2">
+                Ready to streamline your workflow?
+              </h3>
+              <p className="text-muted-foreground">
+                Join 10,000+ teams already using SaaSFlow. Start your free trial today.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 md:justify-end">
+              <Link href="/sign-up">
+                <Button size="lg" className="gap-2">
+                  Start Free Trial
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/demo">
+                <Button variant="outline" size="lg">
+                  Schedule Demo
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          {/* Brand Column */}
+          <div className="col-span-2 md:col-span-3 lg:col-span-2 space-y-4">
+            <Link href="/" className="flex items-center gap-2 font-bold text-xl">
+              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                <Zap className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <span>SaaSFlow</span>
+            </Link>
+            <p className="text-sm text-muted-foreground max-w-xs">
+              The all-in-one platform that helps teams automate workflows, 
+              collaborate seamlessly, and scale their business.
             </p>
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span>123 Tech Street, Silicon Valley, CA 94025</span>
+                <MapPin className="h-4 w-4 flex-shrink-0" />
+                <span>San Francisco, CA 94105</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4" />
+                <Phone className="h-4 w-4 flex-shrink-0" />
                 <span>+1 (555) 123-4567</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Mail className="h-4 w-4" />
-                <span>contact@techcompany.com</span>
+                <Mail className="h-4 w-4 flex-shrink-0" />
+                <span>hello@saasflow.com</span>
               </div>
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Product Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Quick Links</h3>
+            <h3 className="font-semibold">Product</h3>
             <ul className="space-y-2">
-              <li>
-                <Link href="/about" className="text-sm text-muted-foreground hover:text-primary">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/team" className="text-sm text-muted-foreground hover:text-primary">
-                  Our Team
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-sm text-muted-foreground hover:text-primary">
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="text-sm text-muted-foreground hover:text-primary">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy" className="text-sm text-muted-foreground hover:text-primary">
-                  Privacy Policy
-                </Link>
-              </li>
+              {productLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Services */}
+          {/* Company Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Our Services</h3>
+            <h3 className="font-semibold">Company</h3>
             <ul className="space-y-2">
-              <li className="text-sm text-muted-foreground">Web Development</li>
-              <li className="text-sm text-muted-foreground">Mobile Apps</li>
-              <li className="text-sm text-muted-foreground">Cloud Solutions</li>
-              <li className="text-sm text-muted-foreground">AI & Machine Learning</li>
-              <li className="text-sm text-muted-foreground">Consulting Services</li>
+              {companyLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Resources Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Newsletter</h3>
+            <h3 className="font-semibold">Resources</h3>
+            <ul className="space-y-2">
+              {resourceLinks.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Newsletter Column */}
+          <div className="col-span-2 md:col-span-1 space-y-4">
+            <h3 className="font-semibold">Stay Updated</h3>
             <p className="text-sm text-muted-foreground">
-              Subscribe to our newsletter for updates and insights.
+              Get the latest news and updates delivered to your inbox.
             </p>
             <div className="flex gap-2">
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="max-w-[200px]"
+                className="max-w-[180px]"
               />
-              <Button variant="outline">Subscribe</Button>
+              <Button size="sm">Subscribe</Button>
             </div>
+            
             {/* Social Links */}
-            <div className="flex gap-4 pt-4">
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Facebook className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Twitter className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Linkedin className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Github className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-muted-foreground hover:text-primary">
-                <Instagram className="h-5 w-5" />
-              </Link>
+            <div className="pt-2">
+              <p className="text-sm font-medium mb-3">Follow us</p>
+              <div className="flex gap-3">
+                {socialLinks.map((social) => (
+                  <Link
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                    aria-label={social.label}
+                  >
+                    <social.icon className="h-4 w-4" />
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t">
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Your Tech Company. All rights reserved.
-            </p>
-            <div className="flex gap-4">
-              <Link href="/privacy" className="text-sm text-muted-foreground hover:text-primary">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="text-sm text-muted-foreground hover:text-primary">
-                Terms of Service
-              </Link>
+        <div className="mt-16 pt-8 border-t">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col md:flex-row items-center gap-4">
+              <p className="text-sm text-muted-foreground">
+                © {new Date().getFullYear()} SaaSFlow, Inc. All rights reserved.
+              </p>
+              <div className="hidden md:block w-px h-4 bg-border" />
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                {legalLinks.slice(0, 3).map((link) => (
+                  <Link
+                    key={link.label}
+                    href={link.href}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 px-3 py-1 rounded-full bg-green-100 text-green-800 text-xs font-medium">
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                All systems operational
+              </div>
             </div>
           </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
