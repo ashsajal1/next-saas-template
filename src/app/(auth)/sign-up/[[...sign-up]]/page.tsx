@@ -1,12 +1,47 @@
 import { SignUp } from "@clerk/nextjs";
+import { Metadata } from "next";
+import Link from "next/link";
+import { Zap } from "lucide-react";
 
-export const metadata = {
-    title: "Sign up",
-    description: "Sign up to your account",
+export const metadata: Metadata = {
+  title: "Sign Up | SaaSFlow",
+  description: "Create your SaaSFlow account",
 };
 
-export default function Page() {
-    return <div className="grid place-items-center">
-        <SignUp />
-    </div>;;
+export default function SignUpPage() {
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-background">
+      <div className="w-full max-w-sm">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center gap-2 font-bold text-xl">
+            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+              <Zap className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <span className="text-2xl">SaaSFlow</span>
+          </Link>
+        </div>
+
+        {/* Sign Up Form */}
+        <SignUp 
+          appearance={{
+            elements: {
+              rootBox: "w-full",
+              card: "shadow-none border border-border bg-card p-6 rounded-xl dark:bg-primary dark:border-border/50 dark:backdrop-blur-sm",
+              header: "hidden",
+              footer: "hidden",
+            }
+          }}
+        />
+
+        {/* Footer */}
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <Link href="/sign-in" className="text-primary hover:underline font-medium">
+            Sign in
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
 }
