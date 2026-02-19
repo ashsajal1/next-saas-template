@@ -149,13 +149,13 @@ export default function AboutPage() {
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-              We're on a Mission to{" "}
+              We&apos;re on a Mission to{" "}
               <span className="text-primary">Transform Work</span>
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-              SaaSFlow started with a simple idea: what if work didn't have to
-              feel like work? Today, we're helping 10,000+ teams automate the
+              SaaSFlow started with a simple idea: what if work didn&apos;t have to
+              feel like work? Today, we&apos;re helping 10,000+ teams automate the
               mundane and focus on what matters.
             </p>
 
@@ -405,7 +405,7 @@ export default function AboutPage() {
               Recognition
             </h2>
             <p className="text-lg text-muted-foreground">
-              Awards and accolades we're proud of
+              Awards and accolades we&apos;re proud of
             </p>
           </div>
 
@@ -434,7 +434,7 @@ export default function AboutPage() {
               Want to join us?
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              We're always looking for talented people who are passionate about
+              We&apos;re always looking for talented people who are passionate about
               building the future of work. Check out our open positions.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
