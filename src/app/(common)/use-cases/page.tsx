@@ -362,7 +362,7 @@ export default function UseCasesPage() {
 
                     <div className="border-t pt-6 mt-6">
                       <blockquote className="italic text-muted-foreground mb-4">
-                        "{useCase.testimonial.quote}"
+                        &quot;{useCase.testimonial.quote}&quot;
                       </blockquote>
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center font-semibold text-sm">
