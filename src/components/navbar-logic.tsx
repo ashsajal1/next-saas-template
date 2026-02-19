@@ -7,11 +7,11 @@ import { SheetClose } from "@/components/ui/sheet";
 import { forwardRef } from "react";
 
 const links = [
+  { href: "/products", label: "Products" },
+  { href: "/features", label: "Features" },
+
+  { href: "/use-cases", label: "Use Cases" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/about", label: "About" },
-  { href: "/team", label: "Team" },
-  { href: "/contact", label: "Contact" },
-  { href: "/faq", label: "FAQ" },
 ];
 
 interface NavbarLogicProps {
