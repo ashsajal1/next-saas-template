@@ -10,7 +10,9 @@
     "test": "vitest",
     "test:e2e": "cypress run",
     "test:e2e:ui": "cypress open",
-    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/next.svg"
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/next.svg",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.5",
@@ -94,6 +96,17 @@
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^6.1.1",
-    "vitest": "^4.0.18"
+    "vitest": "^4.0.18",
+    "storybook": "^10.2.10",
+    "@storybook/nextjs-vite": "^10.2.10",
+    "@chromatic-com/storybook": "^5.0.1",
+    "@storybook/addon-vitest": "^10.2.10",
+    "@storybook/addon-a11y": "^10.2.10",
+    "@storybook/addon-docs": "^10.2.10",
+    "vite": "^7.3.1",
+    "eslint-plugin-storybook": "^10.2.10",
+    "playwright": "^1.58.2",
+    "@vitest/browser-playwright": "4.0.18",
+    "@vitest/coverage-v8": "4.0.18"
   }
 }
