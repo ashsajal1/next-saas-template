@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
+    "test:e2e": "cypress run",
+    "test:e2e:ui": "cypress open",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/next.svg"
   },
   "dependencies": {
@@ -81,6 +83,7 @@
     "@types/react-dom": "^18.3.7",
     "@vite-pwa/assets-generator": "^0.2.6",
     "@vitejs/plugin-react": "^5.1.4",
+    "cypress": "^15.10.0",
     "drizzle-kit": "^0.23.2",
     "eslint": "^8.57.1",
     "eslint-config-next": "14.2.35",

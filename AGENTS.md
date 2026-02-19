@@ -18,6 +18,10 @@ pnpm run test            # Run all Vitest tests
 pnpm run test -- src/__tests__/middleware.test.ts    # Run single test file
 pnpm run test -- --reporter=verbose                  # Run with verbose output
 
+# E2E Testing
+pnpm run test:e2e        # Run Cypress E2E tests headlessly
+pnpm run test:e2e:ui     # Open Cypress interactive mode
+
 # PWA
 pnpm run generate-pwa-assets   # Generate PWA icons from public/next.svg
 ```
@@ -29,7 +33,7 @@ pnpm run generate-pwa-assets   # Generate PWA icons from public/next.svg
 - **Styling**: Tailwind CSS 3.x + shadcn/ui
 - **Auth**: Clerk
 - **Database**: Prisma ORM (PostgreSQL/Neon)
-- **Testing**: Vitest + @testing-library/react + jsdom
+- **Testing**: Vitest + @testing-library/react + jsdom + Cypress (E2E)
 - **Icons**: Lucide React
 - **UI Components**: Radix UI primitives via shadcn
 
@@ -185,6 +189,7 @@ try {
 
 ### Testing Patterns
 
+#### Unit & Integration Tests
 Place tests in `__tests__` directories or as `.test.ts` files:
 
 ```typescript
@@ -205,6 +210,38 @@ describe('ComponentName', () => {
   });
 });
 ```
+
+#### E2E Tests with Cypress
+Place E2E tests in `cypress/e2e/` directory:
+
+```typescript
+// cypress/e2e/home.cy.ts
+describe('Home Page', () => {
+  beforeEach(() => {
+    cy.visit('/');
+  });
+
+  it('should load the home page', () => {
+    cy.url().should('eq', Cypress.config().baseUrl + '/');
+  });
+
+  it('should display main content', () => {
+    cy.get('h1').should('be.visible');
+  });
+});
+```
+
+**Custom Commands** (defined in `cypress/support/commands.ts`):
+- `cy.login(email, password)` - Authenticate user
+- `cy.isAuthenticated()` - Check auth status
+- `cy.logout()` - Sign out
+- `cy.visitProtected(url)` - Visit protected routes with auth check
+
+**Best Practices**:
+- Use `data-testid` attributes for element selection
+- Leverage `cy.session()` for auth persistence
+- Keep tests independent and isolated
+- Use fixtures in `cypress/fixtures/` for test data
 
 ### Environment Variables
 
