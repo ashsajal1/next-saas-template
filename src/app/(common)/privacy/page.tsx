@@ -32,7 +32,7 @@ const sections = [
     title: "Introduction",
     icon: FileText,
     content: [
-      "SaaSFlow ("we", "us", "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website, products, and services.",
+      "SaaSFlow (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website, products, and services.",
       "By using SaaSFlow, you agree to the collection and use of information in accordance with this policy. We will not use or share your information with anyone except as described in this Privacy Policy.",
     ],
   },
@@ -385,7 +385,7 @@ export default function PrivacyPage() {
           <div className="max-w-3xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold mb-6">Changes to This Policy</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.
+              We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the &quot;Last updated&quot; date.
             </p>
             <p className="text-muted-foreground leading-relaxed">
               You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.
@@ -402,7 +402,7 @@ export default function PrivacyPage() {
               Your trust is our priority
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              We're committed to transparency and protecting your data. If you have any questions or concerns, our team is here to help.
+              We&apos;re committed to transparency and protecting your data. If you have any questions or concerns, our team is here to help.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/contact">
