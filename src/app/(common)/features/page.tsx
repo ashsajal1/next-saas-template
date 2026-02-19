@@ -204,7 +204,7 @@ export default function FeaturesPage() {
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
               Discover the features that make teams 10x more productive. From
-              automation to analytics, we've got you covered.
+              automation to analytics, we&apos;ve got you covered.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
