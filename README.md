@@ -1,60 +1,190 @@
 # Next SaaS Template
 
-The **Next SaaS Template** is a comprehensive starter kit for building scalable SaaS applications with Next.js, featuring built-in authentication, database integration, responsive design, efficient state management, pre-configured API routes, and developer tools like ESLint, Prettier, and TypeScript support.
+A production-ready SaaS starter template built with Next.js 14, featuring modern tooling, comprehensive testing, and beautiful UI components.
 
 ## Features
-- **Next.js**: Framework for server-side rendering, static site generation, and seamless API routes.
-- **TypeScript**: For static typing and improved developer experience.
-- **Clerk Authentication**: Built-in user authentication with support for various providers.
-- **Database Integration**: Both Prisma and Drizzle are included. Choose one based on your preference and remove the other.
-- **Tailwind CSS**: Utility-first CSS framework for rapid UI development.
-- **Shadcn**: Component library for React.
-- **PWA Support**: Built-in Progressive Web App capabilities.
 
-## Getting Started
+- **Next.js 14** - App Router with server components, streaming, and optimized builds
+- **TypeScript 5** - Full type safety with strict mode
+- **Clerk Authentication** - Complete auth system with social providers
+- **Prisma ORM** - Type-safe database operations with PostgreSQL/Neon
+- **Tailwind CSS** - Utility-first styling with custom design tokens
+- **Shadcn/ui** - 50+ accessible UI components (Radix UI + Tailwind)
+- **Storybook** - Component documentation and visual testing
+- **Testing Suite** - Vitest for unit/integration, Cypress for E2E
+- **PWA Support** - Progressive Web App with offline capabilities
+- **Dark Mode** - Built-in theme switching
+- **Role-Based Access** - Admin and user role management
 
-### Installation
-
-Clone the repository and install dependencies using your preferred package manager (npm, pnpm, or yarn):
+## Quick Start
 
 ```bash
+# Clone the repository
 git clone https://github.com/ashsajal1/next-saas-template.git
 cd next-saas-template
-npm install
-# or
+
+# Install dependencies
 pnpm install
-# or
-yarn install
+
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your credentials
+
+# Run database migrations
+npx prisma migrate dev
+
+# Start development server
+pnpm dev
 ```
 
-### Configuration
+## Project Architecture
 
-1. **Authentication**: Set up Clerk for user authentication.
-2. **Database**: Choose either Prisma or Drizzle for your database needs. You cannot use both simultaneously, so:
-   - If using Prisma: Remove Drizzle by deleting `db` directory and `drizzle.config.ts`. Also remove Drizzle dependencies from `package.json`.
-   - If using Drizzle: Remove Prisma by deleting `prisma` directory and `src/lib/prisma.ts`. Also remove Prisma dependencies from `package.json`.
+```
+next-saas-template/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── (admin)/           # Admin routes (protected)
+│   │   │   ├── admin/
+│   │   │   │   ├── @users/    # Parallel route for user management
+│   │   │   │   ├── actions.ts # Server actions
+│   │   │   │   └── page.tsx
+│   │   │   └── layout.tsx
+│   │   ├── (auth)/            # Authentication routes
+│   │   │   ├── sign-in/
+│   │   │   ├── sign-up/
+│   │   │   └── layout.tsx
+│   │   ├── (common)/          # Public routes
+│   │   │   ├── pricing/
+│   │   │   ├── features/
+│   │   │   └── about/
+│   │   ├── (private)/         # Authenticated user routes
+│   │   │   ├── dashboard/
+│   │   │   ├── profile/
+│   │   │   └── settings/
+│   │   ├── __stories__/       # Storybook stories for app components
+│   │   ├── layout.tsx         # Root layout
+│   │   ├── page.tsx           # Home page
+│   │   ├── loading.tsx        # Global loading state
+│   │   ├── error.tsx          # Global error boundary
+│   │   ├── not-found.tsx      # 404 page
+│   │   └── globals.css        # Global styles + Tailwind
+│   ├── components/
+│   │   ├── ui/                # shadcn/ui components
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── badge.tsx
+│   │   │   └── __stories__/   # Component stories
+│   │   ├── navbar.tsx         # Navigation components
+│   │   ├── navbar-client.tsx
+│   │   ├── navbar-logic.tsx
+│   │   ├── hero-section.tsx
+│   │   ├── footer.tsx
+│   │   ├── mode-toggle.tsx    # Dark mode toggle
+│   │   ├── theme-provider.tsx
+│   │   └── __tests__/         # Component tests
+│   ├── lib/
+│   │   ├── utils.ts           # Utility functions (cn, etc.)
+│   │   ├── roles.ts           # Role-based access control
+│   │   └── prisma.ts          # Database client
+│   ├── middleware.ts          # Clerk auth middleware
+│   └── global.d.ts            # Global types
+├── prisma/
+│   └── schema.prisma          # Database schema
+├── __tests__/                 # Test files
+│   ├── unit/                  # Unit tests
+│   └── integration/           # Integration tests
+├── cypress/
+│   └── e2e/                   # E2E tests
+├── .storybook/
+│   ├── main.ts                # Storybook config
+│   └── preview.ts             # Preview settings
+├── public/                    # Static assets
+└── package.json
+```
 
-To switch between Prisma and Drizzle:
-- For Prisma: Follow the setup instructions in the `prisma` folder.
-- For Drizzle: Follow the setup instructions in the `drizzle` folder.
-
-### PWA Assets Generation
-
-Generate PWA assets using the following command:
+## Available Scripts
 
 ```bash
-npm run generate-pwa-assets
-# or
-pnpm run generate-pwa-assets
-# or
-yarn generate-pwa-assets
+# Development
+pnpm dev              # Start Next.js dev server
+pnpm storybook        # Start Storybook (http://localhost:6006)
+
+# Production
+pnpm build           # Build for production
+pnpm start           # Start production server
+
+# Testing
+pnpm test            # Run Vitest tests
+pnpm test:e2e        # Run Cypress E2E tests
+pnpm test:e2e:ui     # Open Cypress interactive mode
+
+# Code Quality
+pnpm lint            # Run ESLint
+
+# PWA
+pnpm generate-pwa-assets   # Generate PWA icons
 ```
 
-Replace `public/next.svg` with the path to your own logo if needed.
+## Environment Variables
 
-### Adding Payment Method (Stripe)
+Create `.env.local` with:
 
-We welcome contributions to add a payment method using Stripe. Please refer to the [Contributing](#contributing) section for more details.
+```env
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+CLERK_SECRET_KEY=sk_test_...
+
+# Database
+DATABASE_URL=postgresql://...
+
+# Optional: Analytics, Monitoring, etc.
+```
+
+## Storybook
+
+Component documentation and visual testing with Storybook:
+
+```bash
+# Start Storybook
+pnpm storybook
+```
+
+Stories are located in:
+- `src/components/ui/__stories__/` - UI component stories
+- `src/app/__stories__/` - Page component stories
+
+Features:
+- Interactive controls for all component props
+- Accessibility testing with a11y addon
+- Responsive viewport testing
+- Auto-generated documentation from TypeScript types
+
+## Testing
+
+Comprehensive testing with Vitest and Cypress:
+
+### Unit & Integration Tests (Vitest)
+```bash
+pnpm test                    # Run all tests
+pnpm test -- --reporter=verbose   # Verbose output
+```
+
+### E2E Tests (Cypress)
+```bash
+pnpm test:e2e               # Run headlessly
+pnpm test:e2e:ui            # Interactive mode
+```
+
+### PWA Assets
+
+Generate PWA icons from your logo:
+
+```bash
+pnpm generate-pwa-assets
+```
+
+Replace `public/next.svg` with your logo before running.
 
 ## Contributing
 
