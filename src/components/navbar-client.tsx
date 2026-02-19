@@ -19,37 +19,33 @@ import NavbarLogic from "./navbar-logic";
 
 export default function NavbarClient() {
   const { user, isLoaded } = useUser();
-  const [isVisible, setIsVisible] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
-      // Show navbar when scrolling down past 100px
-      if (currentScrollY > 100) {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-      
-      setLastScrollY(currentScrollY);
+      setHasScrolled(currentScrollY > 50);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Check initial scroll position
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-50 border-b bg-background/80 backdrop-blur-xl transition-transform duration-300 ease-in-out ${
-        isVisible ? "translate-y-0" : "-translate-y-full"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-0 ${
+        hasScrolled 
+          ? "border-b bg-background/80 backdrop-blur-xl" 
+          : "bg-transparent border-b-0"
       }`}
     >
-      {/* Background gradient */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-[300px] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-br from-primary/20 via-primary/5 to-transparent rounded-full blur-3xl opacity-60" />
-      </div>
+      {/* Background gradient - only visible when scrolled */}
+      {hasScrolled && (
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute -top-[300px] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-br from-primary/20 via-primary/5 to-transparent rounded-full blur-3xl opacity-60" />
+        </div>
+      )}
       
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
