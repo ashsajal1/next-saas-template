@@ -4,22 +4,22 @@
 
 ```bash
 # Development
-npm run dev              # Start Next.js dev server
+pnpm run dev              # Start Next.js dev server
 
 # Production
-npm run build           # Build for production (includes prisma generate)
-npm run start           # Start production server
+pnpm run build           # Build for production (includes prisma generate)
+pnpm run start           # Start production server
 
 # Code Quality
-npm run lint            # Run ESLint (Next.js rules)
+pnpm run lint            # Run ESLint (Next.js rules)
 
 # Testing
-npm run test            # Run all Vitest tests
-npm run test -- src/__tests__/middleware.test.ts    # Run single test file
-npm run test -- --reporter=verbose                  # Run with verbose output
+pnpm run test            # Run all Vitest tests
+pnpm run test -- src/__tests__/middleware.test.ts    # Run single test file
+pnpm run test -- --reporter=verbose                  # Run with verbose output
 
 # PWA
-npm run generate-pwa-assets   # Generate PWA icons from public/next.svg
+pnpm run generate-pwa-assets   # Generate PWA icons from public/next.svg
 ```
 
 ## Technology Stack
