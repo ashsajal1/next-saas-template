@@ -270,7 +270,7 @@ export default function HomePage() {
                     ))}
                   </div>
                   <p className="text-muted-foreground mb-6">
-                    "{testimonial.quote}"
+                    &quot;{testimonial.quote}&quot;
                   </p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center font-semibold text-sm">
@@ -300,7 +300,7 @@ export default function HomePage() {
               Simple, transparent pricing
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Start free, upgrade when you're ready. No hidden fees.
+              Start free, upgrade when you&apos;re ready. No hidden fees.
             </p>
 
             <div className="grid sm:grid-cols-3 gap-4 mb-8 max-w-3xl mx-auto">
