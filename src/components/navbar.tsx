@@ -19,7 +19,7 @@ import NavbarLogic from "./navbar-logic";
 export default async function Navbar() {
   const user = await currentUser();
   return (
-    <nav className="p-4 z-10 fixed backdrop-blur-2xl top-0 w-full h-[80px] border-b flex items-center justify-between">
+    <nav className="p-4 z-50 fixed backdrop-blur-2xl top-0 w-full h-[80px] border-b flex items-center justify-between">
       <div className="flex items-center gap-4">
         <Sheet>
           <SheetTrigger asChild>
