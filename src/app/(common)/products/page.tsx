@@ -281,7 +281,7 @@ export default function ProductsPage() {
               Perfect for every team
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Whether you're a startup, enterprise, or agency, we've got you
+              Whether you&apos;re a startup, enterprise, or agency, we&apos;ve got you
               covered.
             </p>
           </div>
@@ -341,7 +341,7 @@ export default function ProductsPage() {
                     ))}
                   </div>
                   <p className="text-lg mb-6 leading-relaxed">
-                    "{testimonial.quote}"
+                    &quot;{testimonial.quote}&quot;
                   </p>
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center font-semibold text-sm">
