@@ -32,7 +32,7 @@ export default function RootLayout({
           >
             <Nprogress />
             <Navbar />
-            <main className="flex-1 p-3 mt-[80px]">{children}</main>
+            <main className="flex-1">{children}</main>
             <Footer />
           </ThemeProvider>
         </body>
