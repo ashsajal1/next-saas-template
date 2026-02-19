@@ -20,9 +20,57 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Stripe customer relationship
+  stripeCustomerId String? @unique
+  
+  // Subscription relationship
+  subscription  Subscription?
+}
+
+model Subscription {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Stripe subscription details
+  stripeSubscriptionId String @unique
+  stripePriceId        String
+  stripeCurrentPeriodEnd DateTime
+  
+  // Subscription status
+  status            SubscriptionStatus @default(incomplete)
+  plan              Plan               @default(starter)
+  interval          BillingInterval    @default(month)
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+enum SubscriptionStatus {
+  incomplete
+  incomplete_expired
+  trialing
+  active
+  past_due
+  canceled
+  unpaid
+  paused
+}
+
+enum Plan {
+  starter
+  professional
+  business
+  enterprise
+}
+
+enum BillingInterval {
+  month
+  year
 }
