@@ -15,6 +15,8 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { SubscribeButton } from "@/components/subscribe-button";
+import type { PlanType, BillingIntervalType } from "@/lib/plans";
 
 const pricingPlans = [
   {
@@ -40,6 +42,7 @@ const pricingPlans = [
     buttonVariant: "outline" as const,
     popular: false,
     ctaLink: "/sign-up",
+    planId: null as PlanType | null,
   },
   {
     name: "Professional",
@@ -67,6 +70,7 @@ const pricingPlans = [
     ctaLink: "/sign-up",
     badge: "Most Popular",
     savings: "Save $60/year",
+    planId: "professional" as PlanType,
   },
   {
     name: "Business",
@@ -92,6 +96,7 @@ const pricingPlans = [
     popular: false,
     ctaLink: "/sign-up",
     savings: "Save $156/year",
+    planId: "business" as PlanType,
   },
   {
     name: "Enterprise",
@@ -114,6 +119,7 @@ const pricingPlans = [
     popular: false,
     ctaLink: "/contact",
     badge: "Custom",
+    planId: null as PlanType | null,
   },
 ];
 
@@ -349,15 +355,26 @@ export default function PricingPage() {
                 </CardContent>
 
                 <CardFooter>
-                  <Link href={plan.ctaLink} className="w-full">
-                    <Button
-                      className="w-full"
+                  {plan.planId ? (
+                    <SubscribeButton
+                      plan={plan.planId}
+                      interval={isYearly ? "year" : "month"}
                       variant={plan.buttonVariant}
-                      size="lg"
+                      className="w-full"
                     >
                       {plan.buttonText}
-                    </Button>
-                  </Link>
+                    </SubscribeButton>
+                  ) : (
+                    <Link href={plan.ctaLink} className="w-full">
+                      <Button
+                        className="w-full"
+                        variant={plan.buttonVariant}
+                        size="lg"
+                      >
+                        {plan.buttonText}
+                      </Button>
+                    </Link>
+                  )}
                 </CardFooter>
               </Card>
             ))}

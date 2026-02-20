@@ -31,7 +31,7 @@ describe('Server Actions Integration', () => {
       }))
 
       vi.doMock('@clerk/nextjs/server', () => ({
-        clerkClient: {
+        clerkClient: vi.fn(() => ({
           users: {
             getUser: vi.fn().mockResolvedValue({
               publicMetadata: { role: 'user' }
@@ -40,7 +40,7 @@ describe('Server Actions Integration', () => {
               publicMetadata: { role: 'admin' }
             })
           }
-        }
+        }))
       }))
 
       vi.doMock('next/cache', () => ({
@@ -60,11 +60,11 @@ describe('Server Actions Integration', () => {
 
       const error = new Error('User not found')
       vi.doMock('@clerk/nextjs/server', () => ({
-        clerkClient: {
+        clerkClient: vi.fn(() => ({
           users: {
             getUser: vi.fn().mockRejectedValue(error)
           }
-        }
+        }))
       }))
 
       const { setRole } = await import('@/app/(admin)/admin/@users/actions')

@@ -1,14 +1,15 @@
+// This SaaS template uses Clerk for user management.
+// We don't store user data in Prisma - Clerk handles authentication,
+// user profiles, and roles. We only store subscription data with
+// references to Clerk user IDs.
+
 // Note: This template includes both Prisma and Drizzle. If you choose to use Prisma:
 // 1. Delete the /src/db directory
 // 2. Delete drizzle.config.ts
 // 3. Remove drizzle-related dependencies from package.json
 // 4. Run: npm uninstall drizzle-orm @libsql/client drizzle-kit
 
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Learn more about Prisma: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -19,10 +20,67 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// Subscriptions are linked to Clerk users via clerkUserId
+// We don't store user data here - Clerk handles that
+model Subscription {
+  id                String   @id @default(cuid())
+  
+  // Link to Clerk user (not stored in our DB)
+  clerkUserId       String   @unique
+  
+  // Stripe customer ID (stored here since we don't have a User model)
+  stripeCustomerId  String   @unique
+  
+  // Stripe subscription details
+  stripeSubscriptionId String @unique
+  stripePriceId        String
+  stripeCurrentPeriodEnd DateTime
+  
+  // Subscription status
+  status            SubscriptionStatus @default(incomplete)
+  plan              Plan               @default(starter)
+  interval          BillingInterval    @default(month)
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Payment history
+  invoices          Invoice[]
+}
+
+// Track invoice payments for history/receipts
+model Invoice {
+  id                String   @id @default(cuid())
+  subscriptionId    String
+  subscription      Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  stripeInvoiceId   String   @unique
+  amount            Int      // Amount in cents
+  currency          String   @default("usd")
+  status            String   // paid, open, void, uncollectible
+  
+  createdAt         DateTime @default(now())
+}
+
+enum SubscriptionStatus {
+  incomplete
+  incomplete_expired
+  trialing
+  active
+  past_due
+  canceled
+  unpaid
+  paused
+}
+
+enum Plan {
+  starter
+  professional
+  business
+  enterprise
+}
+
+enum BillingInterval {
+  month
+  year
 }
