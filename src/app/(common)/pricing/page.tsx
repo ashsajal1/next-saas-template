@@ -64,7 +64,7 @@ const pricingPlans = [
       "Dedicated account manager",
       "Custom SLA",
     ],
-    buttonText: "Start Free Trial",
+    buttonText: "Get Started",
     buttonVariant: "default" as const,
     popular: true,
     ctaLink: "/sign-up",
@@ -91,7 +91,7 @@ const pricingPlans = [
       "Dedicated account manager",
       "Custom SLA",
     ],
-    buttonText: "Start Free Trial",
+    buttonText: "Get Started",
     buttonVariant: "outline" as const,
     popular: false,
     ctaLink: "/sign-up",
@@ -577,7 +577,7 @@ export default function PricingPage() {
               <Link href="/sign-up">
                 <Button size="lg" className="gap-2">
                   <Zap className="h-4 w-4" />
-                  Start Free Trial
+                  Get Started
                 </Button>
               </Link>
               <Link href="/contact">
