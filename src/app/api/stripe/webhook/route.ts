@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
 
 export async function POST(req: Request) {
   const payload = await req.text();
@@ -23,7 +23,6 @@ export async function POST(req: Request) {
   }
 
   const prisma = (await import("@/lib/prisma")).default;
-  const prismaAny = prisma as any;
 
   try {
     switch (event.type) {
@@ -64,7 +63,7 @@ export async function POST(req: Request) {
           // Create or update subscription in database
           // Note: We don't store user data - Clerk handles that
           // We only store the clerkUserId reference and subscription details
-          await prismaAny.subscription.upsert({
+          await prisma.subscription.upsert({
             where: { clerkUserId },
             create: {
               clerkUserId,
@@ -73,7 +72,7 @@ export async function POST(req: Request) {
               stripePriceId: priceId,
               stripeCurrentPeriodEnd: periodEndDate,
               status: stripeSubscription.status,
-              plan: plan,
+              plan: plan as "starter" | "professional" | "business" | "enterprise",
               interval: interval,
             },
             update: {
@@ -81,7 +80,7 @@ export async function POST(req: Request) {
               stripePriceId: priceId,
               stripeCurrentPeriodEnd: periodEndDate,
               status: stripeSubscription.status,
-              plan: plan,
+              plan: plan as "starter" | "professional" | "business" | "enterprise",
               interval: interval,
             },
           });
@@ -94,7 +93,19 @@ export async function POST(req: Request) {
         
         if (invoice.subscription) {
           const stripeSubscription = await stripe.subscriptions.retrieve(invoice.subscription);
-          const clerkUserId = stripeSubscription.metadata?.clerkUserId;
+          
+          // Try to get clerkUserId from subscription metadata, or fallback to customer lookup
+          let clerkUserId = stripeSubscription.metadata?.clerkUserId;
+          
+          // If no metadata, try to find subscription by stripeCustomerId
+          if (!clerkUserId && invoice.customer) {
+            const subscriptionByCustomer = await prisma.subscription.findFirst({
+              where: { stripeCustomerId: invoice.customer as string },
+            });
+            if (subscriptionByCustomer) {
+              clerkUserId = subscriptionByCustomer.clerkUserId;
+            }
+          }
 
           if (clerkUserId) {
             const firstItem = stripeSubscription.items.data[0];
@@ -103,14 +114,34 @@ export async function POST(req: Request) {
               const currentPeriodEnd = firstItem.current_period_end;
               const periodEndDate = new Date(currentPeriodEnd * 1000);
 
-              await prismaAny.subscription.updateMany({
+              // Update subscription
+              await prisma.subscription.updateMany({
                 where: { clerkUserId },
                 data: {
                   stripeCurrentPeriodEnd: periodEndDate,
                   status: stripeSubscription.status,
                 },
               });
+
+              // Create invoice record for payment history
+              const subscription = await prisma.subscription.findFirst({
+                where: { clerkUserId },
+              });
+
+              if (subscription) {
+                await prisma.invoice.create({
+                  data: {
+                    subscriptionId: subscription.id,
+                    stripeInvoiceId: invoice.id,
+                    amount: invoice.amount_paid,
+                    currency: invoice.currency,
+                    status: invoice.status || "unknown",
+                  },
+                });
+              }
             }
+          } else {
+            console.error(`Could not find user for subscription ${invoice.subscription}`);
           }
         }
         break;
@@ -133,7 +164,7 @@ export async function POST(req: Request) {
           const currentPeriodEnd = firstItem.current_period_end;
           const periodEndDate = new Date(currentPeriodEnd * 1000);
 
-          await prismaAny.subscription.updateMany({
+          await prisma.subscription.updateMany({
             where: { clerkUserId },
             data: {
               stripePriceId: priceId,
@@ -151,7 +182,7 @@ export async function POST(req: Request) {
         const clerkUserId = deletedSubscription.metadata?.clerkUserId;
 
         if (clerkUserId) {
-          await prismaAny.subscription.updateMany({
+          await prisma.subscription.updateMany({
             where: { clerkUserId },
             data: {
               status: "canceled",
