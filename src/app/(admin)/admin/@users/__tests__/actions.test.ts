@@ -5,13 +5,16 @@ vi.mock('@/lib/roles', () => ({
   checkRole: vi.fn()
 }))
 
+const mockUsersGetUser = vi.fn()
+const mockUsersUpdateUser = vi.fn()
+
 vi.mock('@clerk/nextjs/server', () => ({
-  clerkClient: {
+  clerkClient: vi.fn(() => ({
     users: {
-      getUser: vi.fn(),
-      updateUser: vi.fn()
+      getUser: mockUsersGetUser,
+      updateUser: mockUsersUpdateUser
     }
-  }
+  }))
 }))
 
 vi.mock('next/cache', () => ({
@@ -19,7 +22,6 @@ vi.mock('next/cache', () => ({
 }))
 
 import { checkRole } from '@/lib/roles'
-import { clerkClient } from '@clerk/nextjs/server'
 import { revalidatePath } from 'next/cache'
 import { setRole } from '../actions'
 
@@ -39,14 +41,14 @@ describe('setRole action', () => {
 
   it('should update user role to user when moderator is passed', async () => {
     vi.mocked(checkRole).mockReturnValue(true)
-    vi.mocked(clerkClient.users.getUser).mockResolvedValue({
+    mockUsersGetUser.mockResolvedValue({
       publicMetadata: { role: 'user' }
     } as any)
-    vi.mocked(clerkClient.users.updateUser).mockResolvedValue({} as any)
+    mockUsersUpdateUser.mockResolvedValue({} as any)
 
     await setRole('user-123', 'moderator')
 
-    expect(clerkClient.users.updateUser).toHaveBeenCalledWith('user-123', {
+    expect(mockUsersUpdateUser).toHaveBeenCalledWith('user-123', {
       publicMetadata: { role: 'user' }
     })
     expect(revalidatePath).toHaveBeenCalledWith('/')
@@ -54,16 +56,16 @@ describe('setRole action', () => {
 
   it('should update user role when user is admin', async () => {
     vi.mocked(checkRole).mockReturnValue(true)
-    vi.mocked(clerkClient.users.getUser).mockResolvedValue({
+    mockUsersGetUser.mockResolvedValue({
       publicMetadata: { role: 'user' }
     } as any)
-    vi.mocked(clerkClient.users.updateUser).mockResolvedValue({
+    mockUsersUpdateUser.mockResolvedValue({
       publicMetadata: { role: 'admin' }
     } as any)
 
     const result = await setRole('user-123', 'admin')
 
-    expect(clerkClient.users.updateUser).toHaveBeenCalledWith('user-123', {
+    expect(mockUsersUpdateUser).toHaveBeenCalledWith('user-123', {
       publicMetadata: { role: 'admin' }
     })
     expect(revalidatePath).toHaveBeenCalledWith('/')
@@ -72,7 +74,7 @@ describe('setRole action', () => {
 
   it('should handle errors gracefully', async () => {
     vi.mocked(checkRole).mockReturnValue(true)
-    vi.mocked(clerkClient.users.getUser).mockRejectedValue(new Error('User not found'))
+    mockUsersGetUser.mockRejectedValue(new Error('User not found'))
 
     const result = await setRole('user-123', 'admin')
 
@@ -81,15 +83,15 @@ describe('setRole action', () => {
 
   it('should get current user role before updating', async () => {
     vi.mocked(checkRole).mockReturnValue(true)
-    vi.mocked(clerkClient.users.getUser).mockResolvedValue({
+    mockUsersGetUser.mockResolvedValue({
       publicMetadata: { role: 'moderator' }
     } as any)
-    vi.mocked(clerkClient.users.updateUser).mockResolvedValue({
+    mockUsersUpdateUser.mockResolvedValue({
       publicMetadata: { role: 'user' }
     } as any)
 
     await setRole('user-123', 'moderator')
 
-    expect(clerkClient.users.getUser).toHaveBeenCalledWith('user-123')
+    expect(mockUsersGetUser).toHaveBeenCalledWith('user-123')
   })
 })
