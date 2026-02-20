@@ -50,32 +50,38 @@ export async function POST(req: Request) {
 
     const customerId = await getOrCreateCustomer(userId, email);
 
-    // Create checkout session
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      mode: "subscription",
-      billing_address_collection: "auto",
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
-      // Store clerkUserId in metadata so webhooks can identify the user
-      metadata: {
-        clerkUserId: userId,
-        plan,
-        interval,
-      },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?canceled=true`,
-      subscription_data: {
+    // Create checkout session with idempotency key to prevent duplicates
+    const idempotencyKey = `checkout-${userId}-${plan}-${interval}-${Date.now()}`;
+    const session = await stripe.checkout.sessions.create(
+      {
+        customer: customerId,
+        mode: "subscription",
+        billing_address_collection: "auto",
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1,
+          },
+        ],
+        // Store clerkUserId in metadata so webhooks can identify the user
         metadata: {
           clerkUserId: userId,
           plan,
+          interval,
+        },
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?canceled=true`,
+        subscription_data: {
+          metadata: {
+            clerkUserId: userId,
+            plan,
+          },
         },
       },
-    });
+      {
+        idempotencyKey,
+      }
+    );
 
     return NextResponse.json({ sessionId: session.id, url: session.url });
   } catch (error) {
