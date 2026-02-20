@@ -1,6 +1,20 @@
 export type PlanType = "starter" | "professional" | "business" | "enterprise";
 export type BillingIntervalType = "month" | "year";
 
+// Validate required environment variables for paid plans
+const requiredEnvVars = [
+  "STRIPE_PRICE_PROFESSIONAL_MONTHLY",
+  "STRIPE_PRICE_PROFESSIONAL_YEARLY",
+  "STRIPE_PRICE_BUSINESS_MONTHLY",
+  "STRIPE_PRICE_BUSINESS_YEARLY",
+];
+
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    throw new Error(`${envVar} is required`);
+  }
+}
+
 export const PLANS = {
   starter: {
     name: "Starter",
@@ -22,8 +36,8 @@ export const PLANS = {
     name: "Professional",
     description: "Best for growing teams and businesses",
     prices: {
-      month: { amount: 29, priceId: process.env.STRIPE_PRICE_PROFESSIONAL_MONTHLY! },
-      year: { amount: 24, priceId: process.env.STRIPE_PRICE_PROFESSIONAL_YEARLY! },
+      month: { amount: 29, priceId: process.env.STRIPE_PRICE_PROFESSIONAL_MONTHLY || "" },
+      year: { amount: 24, priceId: process.env.STRIPE_PRICE_PROFESSIONAL_YEARLY || "" },
     },
     features: [
       "Unlimited projects",
@@ -41,8 +55,8 @@ export const PLANS = {
     name: "Business",
     description: "For scaling teams with advanced needs",
     prices: {
-      month: { amount: 79, priceId: process.env.STRIPE_PRICE_BUSINESS_MONTHLY! },
-      year: { amount: 66, priceId: process.env.STRIPE_PRICE_BUSINESS_YEARLY! },
+      month: { amount: 79, priceId: process.env.STRIPE_PRICE_BUSINESS_MONTHLY || "" },
+      year: { amount: 66, priceId: process.env.STRIPE_PRICE_BUSINESS_YEARLY || "" },
     },
     features: [
       "Everything in Professional",

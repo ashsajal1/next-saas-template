@@ -1,6 +1,15 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+// Validate required environment variables
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error("STRIPE_SECRET_KEY is required");
+}
+
+if (!process.env.STRIPE_WEBHOOK_SECRET) {
+  throw new Error("STRIPE_WEBHOOK_SECRET is required");
+}
+
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2026-01-28.clover",
   typescript: true,
 });
@@ -12,7 +21,7 @@ export const getOrCreateCustomer = async (clerkUserId: string, email: string) =>
   const prisma = (await import("@/lib/prisma")).default;
 
   // Check if user already has a subscription with Stripe customer ID
-  const existingSubscription = await (prisma as any).subscription.findUnique({
+  const existingSubscription = await prisma.subscription.findUnique({
     where: { clerkUserId },
   });
 
