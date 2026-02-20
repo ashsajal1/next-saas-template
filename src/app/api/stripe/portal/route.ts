@@ -13,30 +13,21 @@ export async function POST() {
       );
     }
 
+    // Get subscription by Clerk user ID (not from a User table)
     const prisma = (await import("@/lib/prisma")).default;
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
+    const subscription = await (prisma as any).subscription.findUnique({
+      where: { clerkUserId: userId },
     });
 
-    if (!user) {
+    if (!subscription?.stripeCustomerId) {
       return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
-    }
-
-    // Type assertion for stripeCustomerId
-    const userRecord = user as typeof user & { stripeCustomerId?: string | null };
-
-    if (!userRecord.stripeCustomerId) {
-      return NextResponse.json(
-        { error: "No Stripe customer found" },
+        { error: "No subscription found. Please subscribe to a plan first." },
         { status: 404 }
       );
     }
 
     const portalSession = await stripe.billingPortal.sessions.create({
-      customer: userRecord.stripeCustomerId,
+      customer: subscription.stripeCustomerId,
       return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings/billing`,
     });
 

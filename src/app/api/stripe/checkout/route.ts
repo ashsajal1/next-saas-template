@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { stripe, getOrCreateCustomer } from "@/lib/stripe";
 import { getPlanPriceId } from "@/lib/plans";
@@ -35,20 +35,19 @@ export async function POST(req: Request) {
       );
     }
 
-    // Get or create Stripe customer
-    const prisma = (await import("@/lib/prisma")).default;
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
+    // Get user data from Clerk (not from Prisma database)
+    // Clerk stores all user data - we don't duplicate it in our DB
+    const clerkUser = await clerkClient.users.getUser(userId);
+    const email = clerkUser.emailAddresses[0]?.emailAddress;
 
-    if (!user) {
+    if (!email) {
       return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
+        { error: "User email not found" },
+        { status: 400 }
       );
     }
 
-    const customerId = await getOrCreateCustomer(userId, user.email);
+    const customerId = await getOrCreateCustomer(userId, email);
 
     // Create checkout session
     const session = await stripe.checkout.sessions.create({
@@ -61,8 +60,9 @@ export async function POST(req: Request) {
           quantity: 1,
         },
       ],
+      // Store clerkUserId in metadata so webhooks can identify the user
       metadata: {
-        userId,
+        clerkUserId: userId,
         plan,
         interval,
       },
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing?canceled=true`,
       subscription_data: {
         metadata: {
-          userId,
+          clerkUserId: userId,
           plan,
         },
       },

@@ -32,10 +32,10 @@ export async function POST(req: Request) {
         
         if (session.mode === "subscription") {
           const subscriptionId = session.subscription as string;
-          const userId = session.metadata?.userId;
+          const clerkUserId = session.metadata?.clerkUserId;
           const plan = session.metadata?.plan;
           
-          if (!userId || !plan) {
+          if (!clerkUserId || !plan) {
             console.error("Missing metadata in checkout session");
             break;
           }
@@ -58,11 +58,17 @@ export async function POST(req: Request) {
           const currentPeriodEnd = firstItem.current_period_end;
           const periodEndDate = new Date(currentPeriodEnd * 1000);
 
+          // Get customer ID
+          const customerId = session.customer as string;
+
           // Create or update subscription in database
+          // Note: We don't store user data - Clerk handles that
+          // We only store the clerkUserId reference and subscription details
           await prismaAny.subscription.upsert({
-            where: { userId },
+            where: { clerkUserId },
             create: {
-              userId,
+              clerkUserId,
+              stripeCustomerId: customerId,
               stripeSubscriptionId: subscriptionId,
               stripePriceId: priceId,
               stripeCurrentPeriodEnd: periodEndDate,
@@ -88,9 +94,9 @@ export async function POST(req: Request) {
         
         if (invoice.subscription) {
           const stripeSubscription = await stripe.subscriptions.retrieve(invoice.subscription);
-          const userId = stripeSubscription.metadata?.userId;
+          const clerkUserId = stripeSubscription.metadata?.clerkUserId;
 
-          if (userId) {
+          if (clerkUserId) {
             const firstItem = stripeSubscription.items.data[0];
             
             if (firstItem) {
@@ -98,7 +104,7 @@ export async function POST(req: Request) {
               const periodEndDate = new Date(currentPeriodEnd * 1000);
 
               await prismaAny.subscription.updateMany({
-                where: { userId },
+                where: { clerkUserId },
                 data: {
                   stripeCurrentPeriodEnd: periodEndDate,
                   status: stripeSubscription.status,
@@ -112,9 +118,9 @@ export async function POST(req: Request) {
 
       case "customer.subscription.updated": {
         const subscriptionData = event.data.object as Stripe.Subscription;
-        const userId = subscriptionData.metadata?.userId;
+        const clerkUserId = subscriptionData.metadata?.clerkUserId;
 
-        if (userId) {
+        if (clerkUserId) {
           const firstItem = subscriptionData.items.data[0];
           
           if (!firstItem) {
@@ -128,7 +134,7 @@ export async function POST(req: Request) {
           const periodEndDate = new Date(currentPeriodEnd * 1000);
 
           await prismaAny.subscription.updateMany({
-            where: { userId },
+            where: { clerkUserId },
             data: {
               stripePriceId: priceId,
               stripeCurrentPeriodEnd: periodEndDate,
@@ -142,11 +148,11 @@ export async function POST(req: Request) {
 
       case "customer.subscription.deleted": {
         const deletedSubscription = event.data.object as Stripe.Subscription;
-        const userId = deletedSubscription.metadata?.userId;
+        const clerkUserId = deletedSubscription.metadata?.clerkUserId;
 
-        if (userId) {
+        if (clerkUserId) {
           await prismaAny.subscription.updateMany({
-            where: { userId },
+            where: { clerkUserId },
             data: {
               status: "canceled",
             },
