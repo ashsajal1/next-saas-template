@@ -37,7 +37,8 @@ export async function POST(req: Request) {
 
     // Get user data from Clerk (not from Prisma database)
     // Clerk stores all user data - we don't duplicate it in our DB
-    const clerkUser = await clerkClient.users.getUser(userId);
+    const clerk = await clerkClient();
+    const clerkUser = await clerk.users.getUser(userId);
     const email = clerkUser.emailAddresses[0]?.emailAddress;
 
     if (!email) {
