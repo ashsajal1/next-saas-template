@@ -237,7 +237,7 @@ export default function DemoPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              What you'll get from your demo
+              What you&apos;ll get from your demo
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Every demo is tailored to your specific needs and goals
@@ -273,7 +273,7 @@ export default function DemoPage() {
                 <CardHeader>
                   <CardTitle className="text-2xl">Book your demo</CardTitle>
                   <CardDescription>
-                    Fill out the form and we'll find a time that works for you.
+                    Fill out the form and we&apos;ll find a time that works for you.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -371,7 +371,7 @@ export default function DemoPage() {
                       </label>
                       <Input type="datetime-local" />
                       <p className="text-xs text-muted-foreground">
-                        Or we'll suggest times based on your timezone
+                        Or we&apos;ll suggest times based on your timezone
                       </p>
                     </div>
 
@@ -426,7 +426,7 @@ export default function DemoPage() {
                   What happens next?
                 </h2>
                 <p className="text-lg text-muted-foreground mb-8">
-                  Here's what you can expect from your 30-minute demo session
+                  Here&apos;s what you can expect from your 30-minute demo session
                 </p>
               </div>
 
@@ -471,9 +471,9 @@ export default function DemoPage() {
                     ))}
                   </div>
                   <blockquote className="text-lg italic mb-4">
-                    "The demo was incredibly insightful. Within 30 minutes, we
+                    &quot;The demo was incredibly insightful. Within 30 minutes, we
                     saw exactly how SaaSFlow could solve our workflow
-                    challenges."
+                    challenges.&quot;
                   </blockquote>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center font-semibold">
@@ -498,10 +498,10 @@ export default function DemoPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Loved by teams who've seen the demo
+              Loved by teams who&apos;ve seen the demo
             </h2>
             <p className="text-lg text-muted-foreground">
-              Here's what they had to say
+              Here&apos;s what they had to say
             </p>
           </div>
 
@@ -518,7 +518,7 @@ export default function DemoPage() {
                     ))}
                   </div>
                   <p className="text-muted-foreground mb-6">
-                    "{testimonial.quote}"
+                    &quot;{testimonial.quote}&quot;
                   </p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center font-semibold text-sm">

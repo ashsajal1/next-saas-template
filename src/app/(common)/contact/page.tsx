@@ -141,17 +141,17 @@ export default function ContactPage() {
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium text-primary mb-8">
               <Sparkles className="h-4 w-4" />
-              We're here to help
+              We&apos;re here to help
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-              Let's Start a{" "}
+              Let&apos;s Start a{" "}
               <span className="text-primary">Conversation</span>
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
               Whether you have questions about our platform, need support, or
-              want to explore partnership opportunities, we'd love to hear from
+              want to explore partnership opportunities, we&apos;d love to hear from
               you.
             </p>
 
@@ -230,7 +230,7 @@ export default function ContactPage() {
                 <CardHeader>
                   <CardTitle className="text-2xl">Send us a message</CardTitle>
                   <CardDescription>
-                    Fill out the form below and we'll get back to you as soon as
+                    Fill out the form below and we&apos;ll get back to you as soon as
                     possible.
                   </CardDescription>
                 </CardHeader>
