@@ -217,7 +217,7 @@ export default function PricingPage() {
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-              Start free, upgrade when you're ready. All plans include a 14-day
+              Start free, upgrade when you&apos;re ready. All plans include a 14-day
               free trial with no credit card required.
             </p>
 
@@ -424,7 +424,7 @@ export default function PricingPage() {
                     ))}
                   </div>
                   <p className="text-muted-foreground mb-4">
-                    "{testimonial.quote}"
+                    &quot;{testimonial.quote}&quot;
                   </p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center font-semibold text-sm">
@@ -454,7 +454,7 @@ export default function PricingPage() {
               Compare all features
             </h2>
             <p className="text-lg text-muted-foreground">
-              See exactly what's included in each plan
+              See exactly what&apos;s included in each plan
             </p>
           </div>
 
