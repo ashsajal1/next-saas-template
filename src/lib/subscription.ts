@@ -11,9 +11,11 @@ export type SubscriptionStatusType =
   | "unpaid"
   | "paused";
 
-export async function getUserSubscription(userId: string) {
+// Get subscription for a Clerk user
+// We use clerkUserId (from Clerk) not our own user ID
+export async function getUserSubscription(clerkUserId: string) {
   const subscription = await (prisma as any).subscription.findUnique({
-    where: { userId },
+    where: { clerkUserId },
   });
 
   if (!subscription) {
