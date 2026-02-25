@@ -92,7 +92,7 @@ export default function ProfilePage() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-full blur-3xl opacity-60" />
       </div>
 
-      <div className="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
+      <div className="container mx-auto px-4 py-8 md:py-12 mt-4 max-w-4xl">
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Profile</h1>
           <p className="text-muted-foreground">
@@ -539,7 +539,7 @@ export default function ProfilePage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-border/50 border-destructive/50">
+              <Card className="border-destructive/50">
                 <CardHeader>
                   <CardTitle className="text-destructive">Danger Zone</CardTitle>
                   <CardDescription>
