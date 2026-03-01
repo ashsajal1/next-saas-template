@@ -1,38 +1,60 @@
 "use server";
 
+import * as Sentry from "@sentry/nextjs";
+import { headers } from "next/headers";
+
 import prisma from "@/lib/prisma";
+import { checkRateLimit } from "@/lib/rate-limit";
+import { sendLeadNotification } from "@/lib/resend";
+import { demoLeadSchema } from "@/lib/validation/leads";
 
 interface FormResult {
   message: string;
   success: boolean;
 }
 
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 export async function submitDemoRequest(formData: FormData): Promise<FormResult> {
-  const firstName = String(formData.get("firstName") || "").trim();
-  const lastName = String(formData.get("lastName") || "").trim();
-  const workEmail = String(formData.get("workEmail") || "").trim();
-  const company = String(formData.get("company") || "").trim();
-  const teamSize = String(formData.get("teamSize") || "").trim();
-  const useCase = String(formData.get("useCase") || "").trim();
-  const timezone = String(formData.get("timezone") || "").trim();
-  const preferredDateTime = String(formData.get("preferredDateTime") || "").trim();
-  const recordDemo = String(formData.get("recordDemo") || "").trim() === "yes";
+  const ipAddress =
+    headers().get("x-forwarded-for")?.split(",")[0]?.trim() || "anonymous";
+  const rateLimit = await checkRateLimit(`demo:${ipAddress}`);
 
-  if (!firstName || !lastName || !workEmail || !company || !teamSize || !useCase || !timezone) {
+  if (!rateLimit.success) {
     return {
       success: false,
-      message: "Please complete all required fields to book your demo.",
+      message: "Too many requests. Please wait a few minutes and try again.",
     };
   }
 
-  if (!EMAIL_REGEX.test(workEmail)) {
+  const payload = demoLeadSchema.safeParse({
+    firstName: String(formData.get("firstName") || ""),
+    lastName: String(formData.get("lastName") || ""),
+    workEmail: String(formData.get("workEmail") || ""),
+    company: String(formData.get("company") || ""),
+    teamSize: String(formData.get("teamSize") || ""),
+    useCase: String(formData.get("useCase") || ""),
+    timezone: String(formData.get("timezone") || ""),
+    preferredDateTime: String(formData.get("preferredDateTime") || ""),
+    recordDemo: String(formData.get("recordDemo") || "").trim() === "yes",
+  });
+
+  if (!payload.success) {
     return {
       success: false,
-      message: "Please provide a valid work email address.",
+      message: payload.error.issues[0]?.message || "Invalid form submission.",
     };
   }
+
+  const {
+    firstName,
+    lastName,
+    workEmail,
+    company,
+    teamSize,
+    useCase,
+    timezone,
+    preferredDateTime,
+    recordDemo,
+  } = payload.data;
 
   const parsedDate = preferredDateTime ? new Date(preferredDateTime) : null;
   const validPreferredDate =
@@ -52,7 +74,22 @@ export async function submitDemoRequest(formData: FormData): Promise<FormResult>
         recordDemo,
       },
     });
+
+    await sendLeadNotification({
+      title: "New Demo Lead",
+      details: [
+        `Name: ${firstName} ${lastName}`,
+        `Email: ${workEmail}`,
+        `Company: ${company}`,
+        `Team Size: ${teamSize}`,
+        `Use Case: ${useCase}`,
+        `Timezone: ${timezone}`,
+        `Preferred Date: ${preferredDateTime || "-"}`,
+        `Record Demo: ${recordDemo ? "yes" : "no"}`,
+      ].join("\n"),
+    });
   } catch (error) {
+    Sentry.captureException(error);
     console.error("Failed to persist demo lead:", error);
     return {
       success: false,

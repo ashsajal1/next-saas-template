@@ -33,8 +33,12 @@ import {
   HeadphonesIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 
+import { contactLeadSchema } from "@/lib/validation/leads";
 import { submitContactForm } from "./actions";
 
 const contactMethods = [
@@ -121,7 +125,17 @@ const faqs = [
 ];
 
 export default function ContactPage() {
-  const [inquiryType, setInquiryType] = useState("");
+  const form = useForm<z.infer<typeof contactLeadSchema>>({
+    resolver: zodResolver(contactLeadSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      company: "",
+      inquiryType: "",
+      message: "",
+    },
+  });
   const [formState, setFormState] = useState<{
     message: string;
     status: "error" | "idle" | "success";
@@ -131,14 +145,17 @@ export default function ContactPage() {
   });
   const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    formData.set("inquiryType", inquiryType);
+  const handleSubmit = (values: z.infer<typeof contactLeadSchema>) => {
+    const submission = new FormData();
+    submission.set("firstName", values.firstName);
+    submission.set("lastName", values.lastName);
+    submission.set("email", values.email);
+    submission.set("company", values.company || "");
+    submission.set("inquiryType", values.inquiryType || "");
+    submission.set("message", values.message);
 
     startTransition(async () => {
-      const result = await submitContactForm(formData);
+      const result = await submitContactForm(submission);
       setFormState({
         status: result.success ? "success" : "error",
         message: result.message,
@@ -146,7 +163,6 @@ export default function ContactPage() {
 
       if (result.success) {
         form.reset();
-        setInquiryType("");
       }
     });
   };
@@ -258,19 +274,32 @@ export default function ContactPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form
+                    onSubmit={form.handleSubmit(handleSubmit)}
+                    className="space-y-6"
+                  >
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <label className="text-sm font-medium">
                           First Name
                         </label>
-                        <Input name="firstName" placeholder="John" required />
+                        <Input placeholder="John" {...form.register("firstName")} />
+                        {form.formState.errors.firstName && (
+                          <p className="text-xs text-red-600">
+                            {form.formState.errors.firstName.message}
+                          </p>
+                        )}
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-medium">
                           Last Name
                         </label>
-                        <Input name="lastName" placeholder="Doe" required />
+                        <Input placeholder="Doe" {...form.register("lastName")} />
+                        {form.formState.errors.lastName && (
+                          <p className="text-xs text-red-600">
+                            {form.formState.errors.lastName.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -279,47 +308,63 @@ export default function ContactPage() {
                         Email Address
                       </label>
                       <Input
-                        name="email"
                         type="email"
                         placeholder="john@company.com"
-                        required
+                        {...form.register("email")}
                       />
+                      {form.formState.errors.email && (
+                        <p className="text-xs text-red-600">
+                          {form.formState.errors.email.message}
+                        </p>
+                      )}
                     </div>
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
                         Company Name
                       </label>
-                      <Input name="company" placeholder="Acme Inc." />
+                      <Input placeholder="Acme Inc." {...form.register("company")} />
                     </div>
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
                         Inquiry Type
                       </label>
-                      <Select value={inquiryType} onValueChange={setInquiryType}>
-                        <input type="hidden" name="inquiryType" value={inquiryType} />
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a topic" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {inquiryTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              {type.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Controller
+                        control={form.control}
+                        name="inquiryType"
+                        render={({ field }) => (
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a topic" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {inquiryTypes.map((type) => (
+                                <SelectItem key={type.value} value={type.value}>
+                                  {type.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
                     </div>
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Message</label>
                       <Textarea
-                        name="message"
                         placeholder="Tell us how we can help you..."
                         rows={5}
-                        required
+                        {...form.register("message")}
                       />
+                      {form.formState.errors.message && (
+                        <p className="text-xs text-red-600">
+                          {form.formState.errors.message.message}
+                        </p>
+                      )}
                     </div>
 
                     <Button
