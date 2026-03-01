@@ -1,8 +1,38 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { submitContactForm } from "@/app/(common)/contact/actions";
+import prisma from "@/lib/prisma";
+
+vi.mock("@/lib/prisma", () => ({
+  default: {
+    contactLead: {
+      create: vi.fn(),
+    },
+  },
+}));
 
 describe("submitContactForm", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns persistence error when create fails", async () => {
+    vi.mocked(prisma.contactLead.create).mockRejectedValueOnce(new Error("db down"));
+
+    const formData = new FormData();
+    formData.set("firstName", "Jane");
+    formData.set("lastName", "Doe");
+    formData.set("email", "jane@example.com");
+    formData.set("message", "Need help with onboarding.");
+
+    const result = await submitContactForm(formData);
+
+    expect(result).toEqual({
+      success: false,
+      message: "Unable to submit right now. Please try again shortly.",
+    });
+  });
+
   it("returns error when required fields are missing", async () => {
     const formData = new FormData();
     formData.set("firstName", "Jane");
@@ -32,7 +62,16 @@ describe("submitContactForm", () => {
   });
 
   it("returns success for valid payload", async () => {
-    const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+    vi.mocked(prisma.contactLead.create).mockResolvedValueOnce({
+      id: "lead_1",
+      firstName: "Jane",
+      lastName: "Doe",
+      email: "jane@example.com",
+      company: "Acme",
+      inquiryType: "support",
+      message: "Need help with onboarding.",
+      createdAt: new Date("2026-03-01T00:00:00.000Z"),
+    });
 
     const formData = new FormData();
     formData.set("firstName", "Jane");
@@ -48,7 +87,6 @@ describe("submitContactForm", () => {
       success: true,
       message: "Thanks! Our team will reach out shortly.",
     });
-    expect(infoSpy).toHaveBeenCalledOnce();
-    infoSpy.mockRestore();
+    expect(prisma.contactLead.create).toHaveBeenCalledOnce();
   });
 });
