@@ -129,6 +129,27 @@ pnpm lint            # Run ESLint
 pnpm generate-pwa-assets   # Generate PWA icons
 ```
 
+## Docker
+
+Build and run with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+This starts:
+- `app` on `http://localhost:3000`
+- `postgres` on `localhost:5432`
+
+Notes:
+- `docker-compose.yml` sets `DATABASE_URL` for the containerized app.
+- Add your app secrets (Clerk, Stripe, etc.) to `.env` before running.
+- Apply Prisma migrations against the running database:
+
+```bash
+pnpm prisma migrate deploy
+```
+
 ## Environment Variables
 
 Create `.env.local` with:
