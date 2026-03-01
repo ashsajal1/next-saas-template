@@ -1,0 +1,43 @@
+services:
+  app:
+    image: node:20-slim
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm install && pnpm dev"
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/next_saas_template?schema=public
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    env_file:
+      - .env.local
+    volumes:
+      - .:/app
+      - app_node_modules:/app/node_modules
+      - pnpm_store:/pnpm/store
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: next_saas_template
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d next_saas_template"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  app_node_modules:
+  pnpm_store:
+  postgres_data_dev:

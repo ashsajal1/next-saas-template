@@ -131,20 +131,38 @@ pnpm generate-pwa-assets   # Generate PWA icons
 
 ## Docker
 
-Build and run with Docker Compose:
+### Development (hot reload)
+
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+
+This starts:
+- `app` with `pnpm dev` on `http://localhost:3000`
+- `postgres` on `localhost:5432`
+
+Notes:
+- Uses bind mounts for live code reload.
+- Reads app secrets from `.env.local`.
+- Run migrations after startup:
+
+```bash
+pnpm prisma migrate dev
+```
+
+### Production-like local run
 
 ```bash
 docker compose up --build
 ```
 
 This starts:
-- `app` on `http://localhost:3000`
+- `app` in production mode on `http://localhost:3000`
 - `postgres` on `localhost:5432`
 
 Notes:
-- `docker-compose.yml` sets `DATABASE_URL` for the containerized app.
-- Add your app secrets (Clerk, Stripe, etc.) to `.env` before running.
-- Apply Prisma migrations against the running database:
+- `docker-compose.yml` reads env from `.env`.
+- Run production migrations:
 
 ```bash
 pnpm prisma migrate deploy
