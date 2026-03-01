@@ -168,6 +168,18 @@ Notes:
 pnpm prisma migrate deploy
 ```
 
+## CI/CD
+
+GitHub Actions workflows included:
+
+- `CI` (`.github/workflows/ci.yml`)
+: Runs `lint`, `test`, and `build` on pull requests and pushes to `main`/`master`.
+- `CD Docker` (`.github/workflows/cd-docker.yml`)
+: Builds and publishes a Docker image to `ghcr.io/<owner>/<repo>` on push to `main`/`master` and version tags.
+
+Optional deployment trigger:
+- Set `DEPLOY_WEBHOOK_URL` as a repository secret to call your hosting platform webhook after image publish.
+
 ## Environment Variables
 
 Create `.env.local` with:
