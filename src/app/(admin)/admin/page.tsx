@@ -1,4 +1,3 @@
-"use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -55,12 +54,12 @@ const quickActions = [
     title: "Manage Users",
     description: "View and manage user accounts, roles, and permissions",
     icon: Users,
-    href: "/admin/@users",
+    href: "/admin",
     color: "bg-blue-500/10 text-blue-500",
   },
   {
     title: "View Analytics",
-    description: "Check detailed analytics and reporting dashboards",
+    description: "Track growth, usage, and performance metrics",
     icon: BarChart3,
     href: "/admin/analytics",
     color: "bg-purple-500/10 text-purple-500",
