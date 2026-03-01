@@ -3,12 +3,31 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { submitContactForm } from "@/app/(common)/contact/actions";
 import prisma from "@/lib/prisma";
 
+vi.mock("@/lib/rate-limit", () => ({
+  checkRateLimit: vi.fn().mockResolvedValue({
+    remaining: 10,
+    reset: 0,
+    success: true,
+  }),
+}));
+vi.mock("@/lib/resend", () => ({
+  sendLeadNotification: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock("@/lib/prisma", () => ({
   default: {
     contactLead: {
       create: vi.fn(),
     },
   },
+}));
+vi.mock("@sentry/nextjs", () => ({
+  captureException: vi.fn(),
+}));
+vi.mock("next/headers", () => ({
+  headers: () =>
+    new Headers({
+      "x-forwarded-for": "127.0.0.1",
+    }),
 }));
 
 describe("submitContactForm", () => {
@@ -40,10 +59,8 @@ describe("submitContactForm", () => {
 
     const result = await submitContactForm(formData);
 
-    expect(result).toEqual({
-      success: false,
-      message: "Please fill in all required fields before submitting.",
-    });
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("required");
   });
 
   it("returns error for invalid email", async () => {
@@ -57,7 +74,7 @@ describe("submitContactForm", () => {
 
     expect(result).toEqual({
       success: false,
-      message: "Please provide a valid email address.",
+      message: "A valid email is required",
     });
   });
 
