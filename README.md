@@ -15,6 +15,9 @@ A production-ready SaaS starter template built with Next.js 14, featuring modern
 - **PWA Support** - Progressive Web App with offline capabilities
 - **Dark Mode** - Built-in theme switching
 - **Role-Based Access** - Admin and user role management
+- **Sentry Monitoring** - Error tracking and performance instrumentation
+- **Resend Email** - Transactional email notifications
+- **Rate Limiting** - Upstash-powered protection for public form endpoints
 
 ## Quick Start
 
@@ -138,7 +141,21 @@ CLERK_SECRET_KEY=sk_test_...
 # Database
 DATABASE_URL=postgresql://...
 
-# Optional: Analytics, Monitoring, etc.
+# Sentry
+SENTRY_DSN=
+NEXT_PUBLIC_SENTRY_DSN=
+SENTRY_ORG=
+SENTRY_PROJECT=
+SENTRY_AUTH_TOKEN=
+
+# Resend
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=onboarding@resend.dev
+LEADS_NOTIFICATION_EMAIL=
+
+# Upstash Rate Limiting
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 ```
 
 ## Storybook
