@@ -1,4 +1,5 @@
-"use client";
+
+import type { Metadata } from "next";
 
 import {
   Shield,
@@ -23,6 +24,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description:
+    "Read SaaSFlow's privacy policy covering data collection, processing, retention, and user rights.",
+};
 
 const lastUpdated = "February 19, 2026";
 

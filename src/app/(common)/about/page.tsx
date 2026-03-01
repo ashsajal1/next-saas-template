@@ -1,4 +1,5 @@
-"use client";
+
+import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +24,12 @@ import {
   Rocket,
 } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Learn about SaaSFlow's mission, values, team, and journey building workflow automation for modern teams.",
+};
 
 const companyStats = [
   { value: "2019", label: "Founded" },
@@ -160,9 +167,9 @@ export default function AboutPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/careers">
+              <Link href="/team">
                 <Button size="lg" className="gap-2">
-                  Join Our Team
+                  Meet Our Team
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
@@ -438,9 +445,9 @@ export default function AboutPage() {
               building the future of work. Check out our open positions.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/careers">
+              <Link href="/team">
                 <Button size="lg" className="gap-2">
-                  View Open Positions
+                  Meet the Team
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>

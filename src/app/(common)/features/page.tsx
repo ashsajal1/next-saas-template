@@ -1,4 +1,5 @@
-"use client";
+
+import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +39,12 @@ import {
   Code,
 } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Features",
+  description:
+    "Explore SaaSFlow features for workflow automation, analytics, team collaboration, and enterprise-grade security.",
+};
 
 const coreFeatures = [
   {

@@ -1,4 +1,5 @@
-"use client";
+
+import type { Metadata } from "next";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,12 @@ import {
   Globe,
 } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Use Cases",
+  description:
+    "See how startups, enterprises, and agencies use SaaSFlow to automate workflows and improve operational outcomes.",
+};
 
 const useCases = [
   {

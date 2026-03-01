@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import {
   Accordion,
   AccordionContent,
@@ -21,6 +23,12 @@ import {
   Globe,
 } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "FAQ",
+  description:
+    "Find quick answers about pricing, security, onboarding, integrations, and support for SaaSFlow.",
+};
 
 const faqCategories = [
   {

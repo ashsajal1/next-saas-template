@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +19,12 @@ import {
   Award,
   Zap,
 } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Team",
+  description:
+    "Meet the SaaSFlow team building modern automation tools for fast-growing organizations.",
+};
 
 const team = [
   {
@@ -232,9 +240,9 @@ export default function TeamPage() {
               Check out our open positions.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/careers">
+              <Link href="/contact">
                 <Button size="lg" className="gap-2">
-                  View Openings
+                  Contact Us
                 </Button>
               </Link>
               <Link href="/contact">
