@@ -1,5 +1,7 @@
 "use server";
 
+import prisma from "@/lib/prisma";
+
 interface FormResult {
   message: string;
   success: boolean;
@@ -29,14 +31,24 @@ export async function submitContactForm(formData: FormData): Promise<FormResult>
     };
   }
 
-  console.info("Contact form submission", {
-    firstName,
-    lastName,
-    email,
-    company,
-    inquiryType,
-    messageLength: message.length,
-  });
+  try {
+    await prisma.contactLead.create({
+      data: {
+        firstName,
+        lastName,
+        email,
+        company: company || null,
+        inquiryType: inquiryType || null,
+        message,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to persist contact lead:", error);
+    return {
+      success: false,
+      message: "Unable to submit right now. Please try again shortly.",
+    };
+  }
 
   return {
     success: true,

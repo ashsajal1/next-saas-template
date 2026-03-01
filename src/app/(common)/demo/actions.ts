@@ -1,5 +1,7 @@
 "use server";
 
+import prisma from "@/lib/prisma";
+
 interface FormResult {
   message: string;
   success: boolean;
@@ -32,17 +34,31 @@ export async function submitDemoRequest(formData: FormData): Promise<FormResult>
     };
   }
 
-  console.info("Demo request submission", {
-    firstName,
-    lastName,
-    workEmail,
-    company,
-    teamSize,
-    useCase,
-    timezone,
-    preferredDateTime,
-    recordDemo,
-  });
+  const parsedDate = preferredDateTime ? new Date(preferredDateTime) : null;
+  const validPreferredDate =
+    parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate : null;
+
+  try {
+    await prisma.demoLead.create({
+      data: {
+        firstName,
+        lastName,
+        workEmail,
+        company,
+        teamSize,
+        useCase,
+        timezone,
+        preferredDateTime: validPreferredDate,
+        recordDemo,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to persist demo lead:", error);
+    return {
+      success: false,
+      message: "Unable to submit right now. Please try again shortly.",
+    };
+  }
 
   return {
     success: true,

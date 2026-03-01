@@ -12,8 +12,6 @@ import {
   Shield,
   Clock,
   ArrowRight,
-  UserPlus,
-  FileText,
   MessageSquare,
 } from "lucide-react";
 import Link from "next/link";
@@ -56,6 +54,13 @@ const quickActions = [
     icon: Users,
     href: "/admin",
     color: "bg-blue-500/10 text-blue-500",
+  },
+  {
+    title: "Leads Inbox",
+    description: "Review contact and demo submissions",
+    icon: MessageSquare,
+    href: "/admin/leads",
+    color: "bg-emerald-500/10 text-emerald-600",
   },
   {
     title: "View Analytics",

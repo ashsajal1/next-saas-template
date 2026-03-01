@@ -62,6 +62,35 @@ model Invoice {
   createdAt         DateTime @default(now())
 }
 
+model ContactLead {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  company     String?
+  inquiryType String?
+  message     String
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model DemoLead {
+  id                String   @id @default(cuid())
+  firstName         String
+  lastName          String
+  workEmail         String
+  company           String
+  teamSize          String
+  useCase           String
+  timezone          String
+  preferredDateTime DateTime?
+  recordDemo        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+
+  @@index([createdAt])
+}
+
 enum SubscriptionStatus {
   incomplete
   incomplete_expired
