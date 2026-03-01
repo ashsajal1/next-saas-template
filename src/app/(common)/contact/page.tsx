@@ -33,7 +33,9 @@ import {
   HeadphonesIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+
+import { submitContactForm } from "./actions";
 
 const contactMethods = [
   {
@@ -119,13 +121,34 @@ const faqs = [
 ];
 
 export default function ContactPage() {
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [inquiryType, setInquiryType] = useState("");
+  const [formState, setFormState] = useState<{
+    message: string;
+    status: "error" | "idle" | "success";
+  }>({
+    status: "idle",
+    message: "",
+  });
+  const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Simulate form submission
-    setFormSubmitted(true);
-    setTimeout(() => setFormSubmitted(false), 3000);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    formData.set("inquiryType", inquiryType);
+
+    startTransition(async () => {
+      const result = await submitContactForm(formData);
+      setFormState({
+        status: result.success ? "success" : "error",
+        message: result.message,
+      });
+
+      if (result.success) {
+        form.reset();
+        setInquiryType("");
+      }
+    });
   };
 
   return (
@@ -241,13 +264,13 @@ export default function ContactPage() {
                         <label className="text-sm font-medium">
                           First Name
                         </label>
-                        <Input placeholder="John" required />
+                        <Input name="firstName" placeholder="John" required />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-medium">
                           Last Name
                         </label>
-                        <Input placeholder="Doe" required />
+                        <Input name="lastName" placeholder="Doe" required />
                       </div>
                     </div>
 
@@ -256,6 +279,7 @@ export default function ContactPage() {
                         Email Address
                       </label>
                       <Input
+                        name="email"
                         type="email"
                         placeholder="john@company.com"
                         required
@@ -266,14 +290,15 @@ export default function ContactPage() {
                       <label className="text-sm font-medium">
                         Company Name
                       </label>
-                      <Input placeholder="Acme Inc." />
+                      <Input name="company" placeholder="Acme Inc." />
                     </div>
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
                         Inquiry Type
                       </label>
-                      <Select>
+                      <Select value={inquiryType} onValueChange={setInquiryType}>
+                        <input type="hidden" name="inquiryType" value={inquiryType} />
                         <SelectTrigger>
                           <SelectValue placeholder="Select a topic" />
                         </SelectTrigger>
@@ -290,6 +315,7 @@ export default function ContactPage() {
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Message</label>
                       <Textarea
+                        name="message"
                         placeholder="Tell us how we can help you..."
                         rows={5}
                         required
@@ -300,12 +326,12 @@ export default function ContactPage() {
                       type="submit"
                       size="lg"
                       className="w-full gap-2"
-                      disabled={formSubmitted}
+                      disabled={isPending}
                     >
-                      {formSubmitted ? (
+                      {isPending ? (
                         <>
                           <Check className="h-4 w-4" />
-                          Message Sent!
+                          Sending...
                         </>
                       ) : (
                         <>
@@ -314,6 +340,17 @@ export default function ContactPage() {
                         </>
                       )}
                     </Button>
+                    {formState.status !== "idle" && (
+                      <p
+                        className={`text-sm text-center ${
+                          formState.status === "success"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {formState.message}
+                      </p>
+                    )}
 
                     <p className="text-xs text-muted-foreground text-center">
                       By submitting this form, you agree to our{" "}
