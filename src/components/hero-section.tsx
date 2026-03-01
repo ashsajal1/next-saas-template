@@ -166,22 +166,6 @@ export default function HeroSection() {
           </div>
         </div>
 
-        {/* Logos section */}
-        <div className="mt-16 md:mt-24 text-center">
-          <p className="text-sm text-muted-foreground mb-8">
-            Trusted by innovative companies worldwide
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 opacity-50">
-            {["Acme Corp", "GlobalTech", "InnovateCo", "FutureSys", "CloudMax"].map((company) => (
-              <div
-                key={company}
-                className="text-lg font-bold text-muted-foreground grayscale hover:grayscale-0 transition-all"
-              >
-                {company}
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

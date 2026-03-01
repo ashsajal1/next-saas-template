@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  Facebook,
   Github,
   Instagram,
   Linkedin,
@@ -19,33 +18,31 @@ import { Input } from "@/components/ui/input";
 const productLinks = [
   { label: "Features", href: "/features" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Integrations", href: "/integrations" },
-  { label: "Changelog", href: "/changelog" },
-  { label: "Documentation", href: "/docs" },
+  { label: "Products", href: "/products" },
+  { label: "Use Cases", href: "/use-cases" },
+  { label: "Live Demo", href: "/demo" },
 ];
 
 const companyLinks = [
   { label: "About Us", href: "/about" },
-  { label: "Blog", href: "/blog" },
-  { label: "Careers", href: "/careers" },
-  { label: "Press Kit", href: "/press" },
+  { label: "Team", href: "/team" },
   { label: "Contact", href: "/contact" },
+  { label: "FAQ", href: "/faq" },
 ];
 
 const resourceLinks = [
-  { label: "Help Center", href: "/help" },
-  { label: "Community", href: "/community" },
-  { label: "Templates", href: "/templates" },
-  { label: "Webinars", href: "/webinars" },
-  { label: "API Reference", href: "/api" },
+  { label: "Feature Tour", href: "/features" },
+  { label: "Use Cases", href: "/use-cases" },
+  { label: "Pricing Guide", href: "/pricing" },
+  { label: "Product Demo", href: "/demo" },
+  { label: "Help Center", href: "/faq" },
 ];
 
 const legalLinks = [
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms of Service", href: "/terms" },
-  { label: "Cookie Policy", href: "/cookies" },
-  { label: "GDPR", href: "/gdpr" },
   { label: "Security", href: "/security" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const socialLinks = [

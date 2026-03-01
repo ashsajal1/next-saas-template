@@ -34,7 +34,9 @@ import {
   Headphones,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+
+import { submitDemoRequest } from "./actions";
 
 const demoBenefits = [
   {
@@ -162,12 +164,40 @@ const faqs = [
 ];
 
 export default function DemoPage() {
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [teamSize, setTeamSize] = useState("");
+  const [useCase, setUseCase] = useState("");
+  const [timezone, setTimezone] = useState("");
+  const [formState, setFormState] = useState<{
+    message: string;
+    status: "error" | "idle" | "success";
+  }>({
+    status: "idle",
+    message: "",
+  });
+  const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setFormSubmitted(true);
-    setTimeout(() => setFormSubmitted(false), 3000);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    formData.set("teamSize", teamSize);
+    formData.set("useCase", useCase);
+    formData.set("timezone", timezone);
+
+    startTransition(async () => {
+      const result = await submitDemoRequest(formData);
+      setFormState({
+        status: result.success ? "success" : "error",
+        message: result.message,
+      });
+
+      if (result.success) {
+        form.reset();
+        setTeamSize("");
+        setUseCase("");
+        setTimezone("");
+      }
+    });
   };
 
   return (
@@ -237,7 +267,7 @@ export default function DemoPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              What you'll get from your demo
+              What you&apos;ll get from your demo
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Every demo is tailored to your specific needs and goals
@@ -273,7 +303,7 @@ export default function DemoPage() {
                 <CardHeader>
                   <CardTitle className="text-2xl">Book your demo</CardTitle>
                   <CardDescription>
-                    Fill out the form and we'll find a time that works for you.
+                    Fill out the form and we&apos;ll find a time that works for you.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -283,13 +313,13 @@ export default function DemoPage() {
                         <label className="text-sm font-medium">
                           First Name *
                         </label>
-                        <Input placeholder="John" required />
+                        <Input name="firstName" placeholder="John" required />
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-medium">
                           Last Name *
                         </label>
-                        <Input placeholder="Doe" required />
+                        <Input name="lastName" placeholder="Doe" required />
                       </div>
                     </div>
 
@@ -298,6 +328,7 @@ export default function DemoPage() {
                         Work Email *
                       </label>
                       <Input
+                        name="workEmail"
                         type="email"
                         placeholder="john@company.com"
                         required
@@ -308,14 +339,15 @@ export default function DemoPage() {
                       <label className="text-sm font-medium">
                         Company Name *
                       </label>
-                      <Input placeholder="Acme Inc." required />
+                      <Input name="company" placeholder="Acme Inc." required />
                     </div>
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
                         Team Size *
                       </label>
-                      <Select required>
+                      <Select value={teamSize} onValueChange={setTeamSize}>
+                        <input type="hidden" name="teamSize" value={teamSize} />
                         <SelectTrigger>
                           <SelectValue placeholder="Select team size" />
                         </SelectTrigger>
@@ -333,7 +365,8 @@ export default function DemoPage() {
                       <label className="text-sm font-medium">
                         Primary Use Case *
                       </label>
-                      <Select required>
+                      <Select value={useCase} onValueChange={setUseCase}>
+                        <input type="hidden" name="useCase" value={useCase} />
                         <SelectTrigger>
                           <SelectValue placeholder="What are you looking for?" />
                         </SelectTrigger>
@@ -351,7 +384,8 @@ export default function DemoPage() {
                       <label className="text-sm font-medium">
                         Your Timezone *
                       </label>
-                      <Select required>
+                      <Select value={timezone} onValueChange={setTimezone}>
+                        <input type="hidden" name="timezone" value={timezone} />
                         <SelectTrigger>
                           <SelectValue placeholder="Select your timezone" />
                         </SelectTrigger>
@@ -369,16 +403,18 @@ export default function DemoPage() {
                       <label className="text-sm font-medium">
                         Preferred Date & Time
                       </label>
-                      <Input type="datetime-local" />
+                      <Input name="preferredDateTime" type="datetime-local" />
                       <p className="text-xs text-muted-foreground">
-                        Or we'll suggest times based on your timezone
+                        Or we&apos;ll suggest times based on your timezone
                       </p>
                     </div>
 
                     <div className="pt-2">
                       <label className="flex items-center gap-2 text-sm cursor-pointer">
                         <input
+                          name="recordDemo"
                           type="checkbox"
+                          value="yes"
                           className="rounded border-gray-300"
                         />
                         <span>Record the demo for my team</span>
@@ -389,12 +425,12 @@ export default function DemoPage() {
                       type="submit"
                       size="lg"
                       className="w-full gap-2"
-                      disabled={formSubmitted}
+                      disabled={isPending}
                     >
-                      {formSubmitted ? (
+                      {isPending ? (
                         <>
                           <Check className="h-4 w-4" />
-                          Request Sent!
+                          Sending...
                         </>
                       ) : (
                         <>
@@ -403,6 +439,17 @@ export default function DemoPage() {
                         </>
                       )}
                     </Button>
+                    {formState.status !== "idle" && (
+                      <p
+                        className={`text-sm text-center ${
+                          formState.status === "success"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {formState.message}
+                      </p>
+                    )}
 
                     <p className="text-xs text-muted-foreground text-center">
                       By booking a demo, you agree to our{" "}
@@ -426,7 +473,7 @@ export default function DemoPage() {
                   What happens next?
                 </h2>
                 <p className="text-lg text-muted-foreground mb-8">
-                  Here's what you can expect from your 30-minute demo session
+                  Here&apos;s what you can expect from your 30-minute demo session
                 </p>
               </div>
 
@@ -471,9 +518,9 @@ export default function DemoPage() {
                     ))}
                   </div>
                   <blockquote className="text-lg italic mb-4">
-                    "The demo was incredibly insightful. Within 30 minutes, we
+                    &quot;The demo was incredibly insightful. Within 30 minutes, we
                     saw exactly how SaaSFlow could solve our workflow
-                    challenges."
+                    challenges.&quot;
                   </blockquote>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center font-semibold">
@@ -498,10 +545,10 @@ export default function DemoPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Loved by teams who've seen the demo
+              Loved by teams who&apos;ve seen the demo
             </h2>
             <p className="text-lg text-muted-foreground">
-              Here's what they had to say
+              Here&apos;s what they had to say
             </p>
           </div>
 
@@ -518,7 +565,7 @@ export default function DemoPage() {
                     ))}
                   </div>
                   <p className="text-muted-foreground mb-6">
-                    "{testimonial.quote}"
+                    &quot;{testimonial.quote}&quot;
                   </p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center font-semibold text-sm">

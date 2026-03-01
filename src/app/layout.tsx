@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     description: "Automate workflows, collaborate seamlessly, and scale your business. Join 10,000+ teams already saving time with SaaSFlow.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/pwa-512x512.png",
         width: 1200,
         height: 630,
         alt: "SaaSFlow - Workflow Automation Platform",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SaaSFlow - Workflow Automation Platform",
     description: "Automate workflows, collaborate seamlessly, and scale your business. Join 10,000+ teams already saving time with SaaSFlow.",
-    images: ["/og-image.png"],
+    images: ["/pwa-512x512.png"],
     creator: "@saasflow",
   },
   robots: {
@@ -68,8 +68,8 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon-180x180.png",
   },
 };
 

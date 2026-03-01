@@ -33,7 +33,13 @@ import {
   HeadphonesIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
+
+import { contactLeadSchema } from "@/lib/validation/leads";
+import { submitContactForm } from "./actions";
 
 const contactMethods = [
   {
@@ -119,13 +125,46 @@ const faqs = [
 ];
 
 export default function ContactPage() {
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const form = useForm<z.infer<typeof contactLeadSchema>>({
+    resolver: zodResolver(contactLeadSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      company: "",
+      inquiryType: "",
+      message: "",
+    },
+  });
+  const [formState, setFormState] = useState<{
+    message: string;
+    status: "error" | "idle" | "success";
+  }>({
+    status: "idle",
+    message: "",
+  });
+  const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Simulate form submission
-    setFormSubmitted(true);
-    setTimeout(() => setFormSubmitted(false), 3000);
+  const handleSubmit = (values: z.infer<typeof contactLeadSchema>) => {
+    const submission = new FormData();
+    submission.set("firstName", values.firstName);
+    submission.set("lastName", values.lastName);
+    submission.set("email", values.email);
+    submission.set("company", values.company || "");
+    submission.set("inquiryType", values.inquiryType || "");
+    submission.set("message", values.message);
+
+    startTransition(async () => {
+      const result = await submitContactForm(submission);
+      setFormState({
+        status: result.success ? "success" : "error",
+        message: result.message,
+      });
+
+      if (result.success) {
+        form.reset();
+      }
+    });
   };
 
   return (
@@ -141,17 +180,17 @@ export default function ContactPage() {
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-sm font-medium text-primary mb-8">
               <Sparkles className="h-4 w-4" />
-              We're here to help
+              We&apos;re here to help
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6">
-              Let's Start a{" "}
+              Let&apos;s Start a{" "}
               <span className="text-primary">Conversation</span>
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
               Whether you have questions about our platform, need support, or
-              want to explore partnership opportunities, we'd love to hear from
+              want to explore partnership opportunities, we&apos;d love to hear from
               you.
             </p>
 
@@ -230,24 +269,37 @@ export default function ContactPage() {
                 <CardHeader>
                   <CardTitle className="text-2xl">Send us a message</CardTitle>
                   <CardDescription>
-                    Fill out the form below and we'll get back to you as soon as
+                    Fill out the form below and we&apos;ll get back to you as soon as
                     possible.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form
+                    onSubmit={form.handleSubmit(handleSubmit)}
+                    className="space-y-6"
+                  >
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <label className="text-sm font-medium">
                           First Name
                         </label>
-                        <Input placeholder="John" required />
+                        <Input placeholder="John" {...form.register("firstName")} />
+                        {form.formState.errors.firstName && (
+                          <p className="text-xs text-red-600">
+                            {form.formState.errors.firstName.message}
+                          </p>
+                        )}
                       </div>
                       <div className="space-y-2">
                         <label className="text-sm font-medium">
                           Last Name
                         </label>
-                        <Input placeholder="Doe" required />
+                        <Input placeholder="Doe" {...form.register("lastName")} />
+                        {form.formState.errors.lastName && (
+                          <p className="text-xs text-red-600">
+                            {form.formState.errors.lastName.message}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -258,33 +310,47 @@ export default function ContactPage() {
                       <Input
                         type="email"
                         placeholder="john@company.com"
-                        required
+                        {...form.register("email")}
                       />
+                      {form.formState.errors.email && (
+                        <p className="text-xs text-red-600">
+                          {form.formState.errors.email.message}
+                        </p>
+                      )}
                     </div>
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
                         Company Name
                       </label>
-                      <Input placeholder="Acme Inc." />
+                      <Input placeholder="Acme Inc." {...form.register("company")} />
                     </div>
 
                     <div className="space-y-2">
                       <label className="text-sm font-medium">
                         Inquiry Type
                       </label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a topic" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {inquiryTypes.map((type) => (
-                            <SelectItem key={type.value} value={type.value}>
-                              {type.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Controller
+                        control={form.control}
+                        name="inquiryType"
+                        render={({ field }) => (
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a topic" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {inquiryTypes.map((type) => (
+                                <SelectItem key={type.value} value={type.value}>
+                                  {type.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      />
                     </div>
 
                     <div className="space-y-2">
@@ -292,20 +358,25 @@ export default function ContactPage() {
                       <Textarea
                         placeholder="Tell us how we can help you..."
                         rows={5}
-                        required
+                        {...form.register("message")}
                       />
+                      {form.formState.errors.message && (
+                        <p className="text-xs text-red-600">
+                          {form.formState.errors.message.message}
+                        </p>
+                      )}
                     </div>
 
                     <Button
                       type="submit"
                       size="lg"
                       className="w-full gap-2"
-                      disabled={formSubmitted}
+                      disabled={isPending}
                     >
-                      {formSubmitted ? (
+                      {isPending ? (
                         <>
                           <Check className="h-4 w-4" />
-                          Message Sent!
+                          Sending...
                         </>
                       ) : (
                         <>
@@ -314,6 +385,17 @@ export default function ContactPage() {
                         </>
                       )}
                     </Button>
+                    {formState.status !== "idle" && (
+                      <p
+                        className={`text-sm text-center ${
+                          formState.status === "success"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
+                      >
+                        {formState.message}
+                      </p>
+                    )}
 
                     <p className="text-xs text-muted-foreground text-center">
                       By submitting this form, you agree to our{" "}

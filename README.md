@@ -15,6 +15,9 @@ A production-ready SaaS starter template built with Next.js 14, featuring modern
 - **PWA Support** - Progressive Web App with offline capabilities
 - **Dark Mode** - Built-in theme switching
 - **Role-Based Access** - Admin and user role management
+- **Sentry Monitoring** - Error tracking and performance instrumentation
+- **Resend Email** - Transactional email notifications
+- **Rate Limiting** - Upstash-powered protection for public form endpoints
 
 ## Quick Start
 
@@ -126,6 +129,61 @@ pnpm lint            # Run ESLint
 pnpm generate-pwa-assets   # Generate PWA icons
 ```
 
+## Docker
+
+### Development (hot reload)
+
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+
+This starts:
+- `app` with `pnpm dev` on `http://localhost:3000`
+- `postgres` on `localhost:5432`
+
+Notes:
+- Uses bind mounts for live code reload.
+- Reads app secrets from `.env.local`.
+- Run migrations after startup:
+
+```bash
+pnpm prisma migrate dev
+```
+
+### Production-like local run
+
+```bash
+docker compose up --build
+```
+
+This starts:
+- `app` in production mode on `http://localhost:3000`
+- `postgres` on `localhost:5432`
+
+Notes:
+- `docker-compose.yml` reads env from `.env`.
+- Run production migrations:
+
+```bash
+pnpm prisma migrate deploy
+```
+
+## CI/CD
+
+GitHub Actions workflows included:
+
+- `CI` (`.github/workflows/ci.yml`)
+: Runs:
+  - Validation pipeline: `prisma validate`, `lint`, `test`, `build`
+  - Docker build verification (no push)
+  - Production dependency audit (`pnpm audit --prod --audit-level=high`)
+  on pull requests and pushes to `main`/`master`.
+- `CD Docker` (`.github/workflows/cd-docker.yml`)
+: Builds and publishes a Docker image to `ghcr.io/<owner>/<repo>` on push to `main`/`master` and version tags.
+
+Optional deployment trigger:
+- Set `DEPLOY_WEBHOOK_URL` as a repository secret to call your hosting platform webhook after image publish.
+
 ## Environment Variables
 
 Create `.env.local` with:
@@ -138,7 +196,21 @@ CLERK_SECRET_KEY=sk_test_...
 # Database
 DATABASE_URL=postgresql://...
 
-# Optional: Analytics, Monitoring, etc.
+# Sentry
+SENTRY_DSN=
+NEXT_PUBLIC_SENTRY_DSN=
+SENTRY_ORG=
+SENTRY_PROJECT=
+SENTRY_AUTH_TOKEN=
+
+# Resend
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=onboarding@resend.dev
+LEADS_NOTIFICATION_EMAIL=
+
+# Upstash Rate Limiting
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 ```
 
 ## Storybook
