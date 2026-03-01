@@ -173,7 +173,11 @@ pnpm prisma migrate deploy
 GitHub Actions workflows included:
 
 - `CI` (`.github/workflows/ci.yml`)
-: Runs `lint`, `test`, and `build` on pull requests and pushes to `main`/`master`.
+: Runs:
+  - Validation pipeline: `prisma validate`, `lint`, `test`, `build`
+  - Docker build verification (no push)
+  - Production dependency audit (`pnpm audit --prod --audit-level=high`)
+  on pull requests and pushes to `main`/`master`.
 - `CD Docker` (`.github/workflows/cd-docker.yml`)
 : Builds and publishes a Docker image to `ghcr.io/<owner>/<repo>` on push to `main`/`master` and version tags.
 
