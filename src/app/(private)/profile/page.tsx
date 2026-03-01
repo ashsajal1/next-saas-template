@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,7 +18,6 @@ import {
   MapPin,
   Building2,
   Calendar,
-  Camera,
   Save,
   Shield,
   Bell,
@@ -52,6 +51,19 @@ export default function ProfilePage() {
     security: true,
     updates: true,
   });
+
+  useEffect(() => {
+    if (!isLoaded || !user) {
+      return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      firstName: user.firstName || "",
+      lastName: user.lastName || "",
+      email: user.primaryEmailAddress?.emailAddress || "",
+    }));
+  }, [isLoaded, user]);
 
   const handleSave = async () => {
     setIsSaving(true);
